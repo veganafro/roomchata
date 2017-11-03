@@ -1,0 +1,22 @@
+{
+  "name": "roomchata",
+  "version": "1.0.0",
+  "description": "this chat app allows users to log in and chat with mostly anonymous counterparts",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyu-csci-ua-0480-007-fall-2017/jm5763-final-project.git"
+  },
+  "keywords": [
+    "roomchata"
+  ],
+  "author": "Jeremy Muhia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyu-csci-ua-0480-007-fall-2017/jm5763-final-project/issues"
+  },
+  "homepage": "https://github.com/nyu-csci-ua-0480-007-fall-2017/jm5763-final-project#readme"
+}
