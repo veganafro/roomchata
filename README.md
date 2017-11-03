@@ -109,7 +109,5 @@ An Example Message with Embedded Items:
 
 ## Annotations / References Used
 
-(___TODO__: list any tutorials/references/etc. that you've based your code off of_)
-
 1. [passport.js authentication docs](http://passportjs.org/docs)
 2. [tutorial on React.js](https://reactjs.org/tutorial/tutorial.html)
