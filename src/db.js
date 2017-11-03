@@ -32,3 +32,5 @@ const Message = new mongoose.Schema({
 mongoose.model('User', User);
 mongoose.model('Room', Room);
 mongoose.model('Message', Message);
+
+mongoose.connect('mongodb://localhost/roomchata');
