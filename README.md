@@ -66,7 +66,7 @@ An Example Message with Embedded Items:
 }
 ```
 
-## [Link to Commented First Draft Schema](db.js)
+## [Link to Commented First Draft Schema](src/db.js)
 
 ## Wireframes
 
