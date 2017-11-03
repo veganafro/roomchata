@@ -69,19 +69,19 @@ An Example Message with Embedded Items:
 
 / - the login page
 
-![base](documentation/login.png)
+![base](documentation/login.JPG)
 
 /home - a landing page showing the rooms you belong to and a search function that creates rooms if they don't exist
 
-![home](documentation/home.png)
+![home](documentation/home.JPG)
 
 /room - the room's chat history and a place to send a message to the room
 
-![room](documentation/room.png)
+![room](documentation/room.JPG)
 
 ## Site map
 
-![sitemap](documentation/sitemap.png)
+![sitemap](documentation/sitemap.JPG)
 
 ## User Stories or Use Cases
 
