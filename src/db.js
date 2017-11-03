@@ -9,9 +9,12 @@ const User = new mongoose.Schema({
     rooms: [String]
 });
 
+// this schema models a room
+// it's important to note that the String array `members` will contain IDs of users in the room
+// this can be used to somewhat quickly look up users form the `User` collection
 const Room = new mongoose.Schema({
     name: String,
-    members: [String]
+    users: [String]
 });
 
 const Message = new mongoose.Schema({
