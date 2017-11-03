@@ -5,3 +5,7 @@ const User = new mongoose.Schema({
     key: String,
     rooms: Object
 });
+
+const Room = new mongoose.Schema({
+    
+});
