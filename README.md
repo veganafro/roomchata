@@ -107,7 +107,7 @@ An Example Message with Embedded Items:
 
 15 points total out of 8 required points
 
-## [Link to Initial Main Project File](app.js)
+## [Link to Initial Main Project File](src/app.js)
 
 ## Annotations / References Used
 
