@@ -21,6 +21,7 @@ const Room = new mongoose.Schema({
 // this schema models a message
 // it's important to note that the String `room` will be an ID of the room the message was sent in
 // this can be used to somewhat quickly look up messages that belong in the room
+// the timestamp is also important for limiting the search for messages history
 const Message = new mongoose.Schema({
     room: String,
     sender: String,
