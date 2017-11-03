@@ -20,3 +20,5 @@ app.get('/home', function(request, response) {
 app.get('/room', function(request, response) {
 
 });
+
+app.listen(3000);
