@@ -12,5 +12,8 @@ const Room = new mongoose.Schema({
 });
 
 const Message = new mongoose.Schema({
-    
+    room: String,
+    sender: String,
+    message: String,
+    timestamp: Number,
 });
