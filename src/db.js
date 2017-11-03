@@ -28,3 +28,7 @@ const Message = new mongoose.Schema({
     message: String,
     timestamp: Number,
 });
+
+mongoose.model('User', User);
+mongoose.model('Room', Room);
+mongoose.model('Message', Message);
