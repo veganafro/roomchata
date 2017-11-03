@@ -8,7 +8,6 @@ to random people and chat about whatever the group of people wants to talk about
 Roomchata allows users to log in and see the topic of a given room, enter that room, and start chatting
 with other users about that topic. Users can also create rooms if they'd like.
 
-
 ## Data Model
 
 Roomchata will store users, rooms, and messages
