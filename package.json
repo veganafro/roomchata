@@ -2,7 +2,7 @@
   "name": "roomchata",
   "version": "1.0.0",
   "description": "this chat app allows users to log in and chat with mostly anonymous counterparts",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
