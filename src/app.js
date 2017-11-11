@@ -12,7 +12,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(body_parser.urlencoded({extended: false}));
 
 app.get('/', function(reqeust, response) {
-    response.render('home');
+    response.render('base');
 });
 
 app.get('/search', function(request, response) {
