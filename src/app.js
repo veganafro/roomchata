@@ -5,7 +5,6 @@ const app = express();
 
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
-app.set('port', (process.env.PORT || 5000));
 app.use(body_parser.urlencoded({extended: false}));
 
 app.get('/', function(reqeust, response) {
@@ -28,4 +27,6 @@ app.get('/room', function(request, response) {
 
 });
 
-// app.listen(3000);
+app.listen(process.env.PORT || 3000, function() {
+    console.log('Listening on port', this.address().port, app.settings.env);
+});
