@@ -11,6 +11,7 @@ class Base extends React.Component {
                     </title>
                 </head>
                 <body>
+                    <h3>roomchata</h3>
                     {this.props.children}
                 </body>
             </html>
