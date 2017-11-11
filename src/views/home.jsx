@@ -1,1 +1,1 @@
-this is a temporary page
+'this is a temporary page';

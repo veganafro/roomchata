@@ -1,10 +1,14 @@
+const path = require('path');
 const express = require('express');
 const body_parser = require('body-parser');
+const react_views = require('express-react-views');
 
 const app = express();
 
 app.set('view engine', 'jsx');
-app.set('views', __dirname + '/views');
+app.engine('jsx', react_views.createEngine());
+
+app.set('views', path.join(__dirname, 'views'));
 app.use(body_parser.urlencoded({extended: false}));
 
 app.get('/', function(reqeust, response) {

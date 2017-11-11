@@ -21,6 +21,10 @@
   "homepage": "https://github.com/nyu-csci-ua-0480-007-fall-2017/jm5763-final-project#readme",
   "dependencies": {
     "express": "^4.16.2",
-    "jsx": "^0.9.89"
+    "express-react-views": "^0.10.4",
+    "jsx": "^0.9.89",
+    "path": "^0.12.7",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0"
   }
 }
