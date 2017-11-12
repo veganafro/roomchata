@@ -19,16 +19,16 @@ app.get('/search', function(request, response) {
     response.render('search');
 });
 
+app.get('/room', function(request, response) {
+
+});
+
 app.post('/', function(request, response) {
 
 });
 
-app.get('/home', function(request, response) {
-
-});
-
-app.get('/room', function(request, response) {
-
+app.post('/search', function(request, response) {
+    response.redirect('/search');
 });
 
 app.listen(process.env.PORT || 3000, function() {
