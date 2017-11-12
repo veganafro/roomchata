@@ -11,7 +11,7 @@ app.engine('jsx', react_views.createEngine());
 app.set('views', path.join(__dirname, 'views'));
 app.use(body_parser.urlencoded({extended: false}));
 
-app.get('/', function(reqeust, response) {
+app.get('/', function(request, response) {
     response.render('base');
 });
 

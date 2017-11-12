@@ -6,8 +6,8 @@ class Base extends React.Component {
         return (
             <html>
                 <head>
-                    <title>{
-                        this.props.title}
+                    <title>
+                        {this.props.title}
                     </title>
                 </head>
                 <body>
