@@ -1,3 +1,6 @@
+const React = require('react');
+const PropTypes = require('prop-types');
+
 class SearchBar extends React.Component {
     render() {
         return (
@@ -15,3 +18,5 @@ class SearchBar extends React.Component {
         )
     }
 }
+
+module.exports = SearchBar;
