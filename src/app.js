@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const firebase = require('firebase');
 const body_parser = require('body-parser');
 const react_views = require('express-react-views');
 
@@ -33,4 +34,9 @@ app.post('/search', function(request, response) {
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Listening on port', this.address().port, 'in context', app.settings.env);
+
+    if (app.settings.env === 'development') {
+        require('dotenv').config();
+        console.log(process.env.apiKey);
+    }
 });
