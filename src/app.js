@@ -6,6 +6,10 @@ const react_views = require('express-react-views');
 
 const app = express();
 
+if (app.settings.env === 'development') {
+    require('dotenv').config();
+}
+
 app.set('view engine', 'jsx');
 app.engine('jsx', react_views.createEngine());
 
@@ -25,7 +29,7 @@ app.get('/room', function(request, response) {
 });
 
 app.post('/', function(request, response) {
-    
+
 });
 
 app.post('/search', function(request, response) {
@@ -34,9 +38,5 @@ app.post('/search', function(request, response) {
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Listening on port', this.address().port, 'in context', app.settings.env);
-
-    if (app.settings.env === 'development') {
-        require('dotenv').config();
-        console.log(process.env.apiKey);
-    }
+    console.log(process.env);
 });
