@@ -1,1 +1,1 @@
-console.log(this.apiKey);
+console.log(process);
