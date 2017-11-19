@@ -13,6 +13,12 @@ class Base extends React.Component {
                 <body>
                     <h3>roomchata</h3>
                     {this.props.children}
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
+                    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
                     <script src='scripts/main.js'></script>
                 </body>
             </html>
