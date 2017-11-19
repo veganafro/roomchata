@@ -12,12 +12,6 @@ class Base extends React.Component {
             </head>
             <body>
                 <h3>roomchata</h3>
-                <div>{this.props.apiKey}</div>
-                <div>{this.props.authDomain}</div>
-                <div>{this.props.databaseURL}</div>
-                <div>{this.props.projectId}</div>
-                <div>{this.props.storageBucket}</div>
-                <div>{this.props.messagingSenderId}</div>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
@@ -39,7 +33,5 @@ Base.defaultProps = {
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
 }
-
-console.log(process.env);
 
 module.exports = Base;
