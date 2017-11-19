@@ -18,6 +18,7 @@ class Base extends React.Component {
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
+                <script src="bundle.js"></script>
                 <script src='scripts/main.js'></script>
             </body>
             </html>
