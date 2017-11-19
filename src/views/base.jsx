@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const env_vars = process !== 'undefined' ? process.env : undefined;
+// const env_vars = process !== 'undefined' ? process.env : undefined;
 
 class Base extends React.Component {
     render() {
@@ -28,8 +28,8 @@ class Base extends React.Component {
     }
 }
 
-Base.defaultProps = {
-    env_vars: env_vars
-}
+// Base.defaultProps = {
+//     env_vars: env_vars
+// }
 
 module.exports = Base;
