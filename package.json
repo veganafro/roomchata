@@ -28,7 +28,8 @@
     "jsx": "^0.9.89",
     "path": "^0.12.7",
     "react": "^16.1.0",
-    "react-dom": "^16.1.0"
+    "react-dom": "^16.1.0",
+    "request": "^2.83.0"
   },
   "devDependencies": {
     "browserify": "^14.5.0"
