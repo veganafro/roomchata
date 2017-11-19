@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "browserify src/scripts/main.js -o src/bundle.js"
+    "postinstall": "browserify src/scripts/main.js -o src/scripts/bundle.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/nyu-csci-ua-0480-007-fall-2017/jm5763-final-project#readme",
   "dependencies": {
-    "browserify": "^14.5.0",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "express-react-views": "^0.10.4",
@@ -30,5 +29,8 @@
     "path": "^0.12.7",
     "react": "^16.1.0",
     "react-dom": "^16.1.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.5.0"
   }
 }
