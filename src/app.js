@@ -49,4 +49,5 @@ app.post('/search', function(request, response) {
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Listening on port', this.address().port, 'in context', app.settings.env);
+    console.log(process.env);
 });
