@@ -13,6 +13,7 @@ class Base extends React.Component {
                 <body>
                     <h3>roomchata</h3>
                     {this.props.children}
+                    <script src='../scripts/main.js'></script>
                 </body>
             </html>
         );
