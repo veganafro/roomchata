@@ -1,8 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-// const env_vars = process !== 'undefined' ? process.env : undefined;
-
 class Base extends React.Component {
     render() {
         return (
@@ -14,7 +12,12 @@ class Base extends React.Component {
             </head>
             <body>
                 <h3>roomchata</h3>
-                <div>{this.props.env_vars}</div>
+                <div>{this.props.apiKey}</div>
+                <div>{this.props.authDomain}</div>
+                <div>{this.props.databaseURL}</div>
+                <div>{this.props.projectId}</div>
+                <div>{this.props.storageBucket}</div>
+                <div>{this.props.messagingSenderId}</div>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
@@ -28,8 +31,15 @@ class Base extends React.Component {
     }
 }
 
-// Base.defaultProps = {
-//     env_vars: env_vars
-// }
+Base.defaultProps = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+}
+
+console.log(process.env);
 
 module.exports = Base;
