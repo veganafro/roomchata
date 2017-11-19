@@ -6,9 +6,9 @@ const react_views = require('express-react-views');
 
 const app = express();
 
-// if (app.settings.env === 'development') {
-require('dotenv').config();
-// }
+if (app.settings.env === 'development') {
+    require('dotenv').config();
+}
 
 firebase.initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
