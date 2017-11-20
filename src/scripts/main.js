@@ -15,6 +15,14 @@ class Roomchata {
         this.database = firebase.database();
         this.auth.onAuthStateChanged(this.onAuthStateChanged().bind(this));
     }
+
+    onAuthStateChanged(user) {
+        if (user) {
+            let profile_pic = user.photoURL;
+        } else {
+            this.userName.setAttribute('hidden', 'true');
+        }
+    }
 }
 
 window.onload = function() {
