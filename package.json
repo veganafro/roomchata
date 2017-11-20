@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "browserify src/scripts/main.js > src/scripts/bundle.js --debug  --ig"
+    "postinstall": "browserify src/scripts/main.js -t envify > src/scripts/bundle.js --debug --ig"
   },
   "repository": {
     "type": "git",
