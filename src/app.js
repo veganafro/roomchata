@@ -1,5 +1,4 @@
 const path = require('path');
-const envify = require('envify');
 const express = require('express');
 const firebase = require('firebase');
 const body_parser = require('body-parser');

@@ -1,5 +1,4 @@
 const firebase = require('firebase');
-console.log(process);
 
 window.onload = function() {
     firebase.initializeApp({
