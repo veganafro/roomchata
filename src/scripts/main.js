@@ -36,9 +36,5 @@ class Roomchata {
 }
 
 window.onload = function() {
-    if (window.firebase) {
-        window.roomchata = new Roomchata();
-    } else {
-        alert('Could not connect to firebase. Try again later.');
-    }
+    window.roomchata = new Roomchata();
 }
