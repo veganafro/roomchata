@@ -1,9 +1,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
+const Base = require('./base');
 
 class SearchBar extends React.Component {
     render() {
         return (
+            <Base title='Search'>
             <form method='POST' className='search_bar_form'>
                 <input
                     type='text'
@@ -12,6 +14,7 @@ class SearchBar extends React.Component {
                     value={this.props.search_bar_text}>
                 </input>
             </form>
+            </Base>
         )
     }
 }
