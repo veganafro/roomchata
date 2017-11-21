@@ -21,7 +21,12 @@ class Base extends React.Component {
     }
 }
 
+Base.propTypes = {
+    title: PropTypes.string,
+}
+
 Base.defaultProps = {
+    title: 'Roomchata',
 }
 
 module.exports = Base;
