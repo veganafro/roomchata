@@ -9,9 +9,12 @@ class Base extends React.Component {
                 <title>
                     {this.props.title}
                 </title>
+
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+                <link rel="stylesheet" href="stylesheets/style.css">
             </head>
             <body>
-                <h3>roomchata</h3>
+                <h3 className='base_header'>roomchata</h3>
                 {this.props.children}
                 <script src="scripts/bundle.js"></script>
                 <script src='scripts/main.js'></script>
