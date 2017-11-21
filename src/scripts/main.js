@@ -16,6 +16,16 @@ class Roomchata {
         this.auth.onAuthStateChanged(this.onAuthStateChanged().bind(this));
     }
 
+    signIn(email, password) {
+        if (email.split('@').length !== 2) {
+            alert('Please enter a valid email');
+        } else {
+            this.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+                alert(error.message);
+            });
+        }
+    }
+
     onAuthStateChanged(user) {
         if (user) {
             let profile_pic = user.photoURL;
