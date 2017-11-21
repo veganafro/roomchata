@@ -1,8 +1,15 @@
 const path = require('path');
 const express = require('express');
+const session = require('session');
 const firebase = require('firebase');
 const body_parser = require('body-parser');
 const react_views = require('express-react-views');
+
+const session_options = {
+    secret: 'a secret',
+    saveUninitialized: false,
+    resave: false
+};
 
 const app = express();
 
@@ -13,6 +20,7 @@ if (app.settings.env === 'development') {
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(session(session_options));
 app.use(body_parser.urlencoded({extended: false}));
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
