@@ -18,7 +18,7 @@ class Roomchata {
 
     signIn(email, password) {
         if (email.split('@').length !== 2) {
-            alert('Please enter a valid email');
+            alert('Please enter a valid email.');
         } else {
             this.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
                 alert(error.message);
@@ -36,5 +36,9 @@ class Roomchata {
 }
 
 window.onload = function() {
-    window.roomchata = new Roomchata();
+    if (window.firebase) {
+        window.roomchata = new Roomchata();
+    } else {
+        alert('Could not connect to firebase. Try again later.');
+    }
 }

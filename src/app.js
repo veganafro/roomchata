@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
-const session = require('session');
 const firebase = require('firebase');
+const session = require('express-session');
 const body_parser = require('body-parser');
 const react_views = require('express-react-views');
 
