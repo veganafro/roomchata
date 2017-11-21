@@ -4,16 +4,12 @@ const PropTypes = require('prop-types');
 class SearchBar extends React.Component {
     render() {
         return (
-            <form method='POST'>
+            <form method='POST' className='search_bar_form'>
                 <input
                     type='text'
                     name='search_bar_text'
                     placeholder='Search...'
                     value={this.props.search_bar_text}>
-                </input>
-                <input
-                    type='submit'
-                    value='Go'>
                 </input>
             </form>
         )
