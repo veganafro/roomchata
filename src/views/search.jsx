@@ -6,8 +6,9 @@ class SearchBar extends React.Component {
     render() {
         return (
             <Base title='Search'>
-            <form method='POST' className='search_bar_form'>
+            <form method='POST'>
                 <input
+                    className='search_bar_input'
                     type='text'
                     name='search_bar_text'
                     placeholder='Search...'
