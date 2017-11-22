@@ -14,7 +14,6 @@ class Base extends React.Component {
                 <link rel="stylesheet" href="stylesheets/style.css"></link>
             </head>
             <body>
-                <h3 className='base_header'>roomchata</h3>
                 {this.props.children}
                 <script src="scripts/bundle.js"></script>
                 <script src='scripts/main.js'></script>
