@@ -46,7 +46,7 @@ class Roomchata {
         } else {
             this.auth.createUserWithEmailAndPassword(this.email_input.value, this.password_input.value).catch(function (error) {
                 alert(error.message);
-            })
+            });
         }
     }
 
