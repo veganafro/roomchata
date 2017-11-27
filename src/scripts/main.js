@@ -47,6 +47,14 @@ class Roomchata {
             this.signInButton.removeAttribute('hidden');
         }
     }
+
+    checkSignedInWithMessage() {
+        if (this.auth.currentUser) {
+            return true;
+        }
+        alert('You must sign in first');
+        return false;
+    }
 }
 
 window.onload = function() {
