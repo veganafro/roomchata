@@ -88,6 +88,17 @@ class Roomchata {
         }
     }
 
+    setImageUrl(image_uri, image_element) {
+        if (image_uri.startsWith('gs://')) {
+            image_element.src = this.LOADING_IMAGE_URL;
+            this.storage.refFromURL(image_uri).getMeatadata().then(function(metadata) {
+                image_element.src = metadata.downloadURLs[0];
+            });
+        } else {
+            image_element.src = image_uri;
+        }
+    }
+
     saveImageMessage(evt) {
         evt.preventDefault();
         // TODO: implement image sending
