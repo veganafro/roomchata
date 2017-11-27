@@ -49,9 +49,9 @@ class Roomchata {
     }
 }
 
-// window.onload = function() {
-//     window.roomchata = new Roomchata();
-// };
+window.onload = function() {
+    window.roomchata = new Roomchata();
+};
 
 module.exports = {
     Roomchata: Roomchata,
