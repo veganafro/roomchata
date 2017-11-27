@@ -26,10 +26,16 @@ class Login extends React.Component {
                 </input>
                 <br></br>
                 <button
-                    className='login_submit_input'
+                    className='login_sign_in_submit_input'
                     type='submit'
                     name='login_submit_button'>
                     log in
+                </button>
+                <button
+                    className='login_sing_up_submit_input'
+                    type='submit'
+                    name='login_submit_button'>
+                    sign up
                 </button>
             </form>
             </Base>

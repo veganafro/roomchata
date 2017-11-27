@@ -9,7 +9,7 @@ html, body {
 .login_form {
 }
 
-input[name*=login], button[name*=login] {
+input[name*=login] {
     margin: 5px;
 }
 
@@ -20,10 +20,11 @@ input[name*=login], button[name*=login] {
     -moz-box-sizing: border-box;
 }
 
-.login_submit_input {
+button[name*=login] {
     border: none;
     outline: none;
     background: none;
     cursor: pointer;
     text-decoration: none;
+    margin: 8px;
 }
