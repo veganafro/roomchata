@@ -33,7 +33,7 @@ class Roomchata {
 
     onAuthStateChanged(user) {
         if (user) {
-            let profile_pic = user.photoUrl;
+            let profile_pic = user.photoURL;
             let user_name = user.displayName;
 
             // do stuff to update the client side's profile picture and username
@@ -67,6 +67,25 @@ class Roomchata {
 
         this.messages_reference.limitToLast(10).on('child_added', set_message);
         this.messages_reference.limitToLast(10).on('child_changed', set_message);
+    }
+
+    sendMessage(evt) {
+        evt.preventDefault();
+
+        if (this.message_input.value && this.checkSignedInWithMessage()) {
+            const current_user = this.auth.currentUser;
+
+            this.messages_reference.push({
+                name: current_user.displayName,
+                text: this.message_input.value,
+                photoUrl: current_user.photoURL,
+            }).then(function() {
+                this.message_input.value = '';
+                this.toggleButton();
+            }.bind(this)).catch(function(error) {
+                console.log('$$$ could not add message to the database', error);
+            });
+        }
     }
 }
 
