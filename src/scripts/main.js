@@ -69,7 +69,7 @@ class Roomchata {
         this.messages_reference.limitToLast(10).on('child_changed', set_message);
     }
 
-    sendMessage(evt) {
+    saveTextMessage(evt) {
         evt.preventDefault();
 
         if (this.message_input.value && this.checkSignedInWithMessage()) {
@@ -86,6 +86,11 @@ class Roomchata {
                 console.log('$$$ could not add message to the database', error);
             });
         }
+    }
+
+    saveImageMessage(evt) {
+        evt.preventDefault();
+        // TODO: implement image sending
     }
 }
 
