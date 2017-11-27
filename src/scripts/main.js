@@ -101,7 +101,32 @@ class Roomchata {
 
     saveImageMessage(evt) {
         evt.preventDefault();
-        // TODO: implement image sending
+        const file = evt.target.files[0];
+
+        this.image_form.reset();
+
+        if (!file.type.match('image.*')) {
+            alert('You can only upload images.');
+            return;
+        }
+
+        if (this.checkSignedInWithMessage()) {
+            const current_user = this.auth.currentUser;
+
+            this.messages_reference.push({
+                name: current_user.displayMessage,
+                imageUrl: this.LOADING_IMAGE_URL,
+                photoUrl: current_user.photoURL,
+            }).then(function(data) {
+                const file_path = current_user.uid + '/' + data.key + '/' + file.name;
+                return this.storage.ref(file_path).put(file).then(function(snapshot) {
+                    const full_path = snapshot.metadata.fullPath;
+                    return data.update({
+                        imageUrl: this.storage.ref(full_path).toString(),
+                    });
+                }.bind(this));
+            }.bind(this));
+        }
     }
 }
 
