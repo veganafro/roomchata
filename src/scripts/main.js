@@ -125,9 +125,9 @@ class Roomchata {
                         imageUrl: this.storage.ref(full_path).toString(),
                     });
                 }.bind(this));
-            }.bind(this).catch(function(error) {
+            }.bind(this)).catch(function(error) {
                 console.log('$$$ could not upload image to the database', error);
-            }));
+            });
         }
     }
 }
