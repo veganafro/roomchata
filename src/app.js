@@ -4,7 +4,7 @@ const firebase = require('firebase');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const react_views = require('express-react-views');
-const roomchata = require('./scripts/main').Roomchata;
+const Roomchata = require('./scripts/main').Roomchata;
 
 const session_options = {
     secret: 'a secret',
