@@ -10,7 +10,7 @@ class SearchBar extends React.Component {
                     className='search_bar_input'
                     type='text'
                     name='search_bar_text'
-                    placeholder='Search...'
+                    placeholder='search...'
                     value={this.props.search_bar_text}>
                 </input>
             </form>
