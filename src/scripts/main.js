@@ -3,6 +3,9 @@ const firebase = require('firebase');
 
 class Roomchata {
     constructor() {
+        this.username_input = document.querySelector('input[name=login_username_text]')
+        this.sign_in_button = document.querySelector('button[name=login_submit_button]');
+
         firebase.initializeApp({
             apiKey: process.env.FIREBASE_API_KEY,
             authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -14,7 +17,7 @@ class Roomchata {
         this.auth = firebase.auth();
         this.storage = firebase.storage();
         this.database = firebase.database();
-        this.auth.onAuthStateChanged(this.onAuthStateChanged().bind(this));
+        this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
     }
 
     signIn(email, password) {
@@ -36,15 +39,15 @@ class Roomchata {
             let profile_pic = user.photoURL;
             let user_name = user.displayName;
 
-            // do stuff to update the client side's profile picture and username
+            // TODO: do stuff to update the client side's profile picture and username
 
             this.loadMessages();
             this.saveMessagingDeviceToken();
         } else {
-            this.userPic.setAttribute('hidden', 'true');
-            this.userName.setAttribute('hidden', 'true');
-            this.signOutButton.setAttribute('hidden', 'true');
-            this.signInButton.removeAttribute('hidden');
+            // this.user_pic.setAttribute('hidden', 'true');
+            // this.username.setAttribute('hidden', 'true');
+            // this.sign_out_button.setAttribute('hidden', 'true');
+            this.sign_in_button.removeAttribute('hidden');
         }
     }
 
