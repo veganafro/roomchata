@@ -3,7 +3,9 @@ const firebase = require('firebase');
 
 class Roomchata {
     constructor() {
-        this.username_input = document.querySelector('input[name=login_username_text]')
+        this.email_input = document.querySelector('input[name=login_email_text]');
+        this.username_input = document.querySelector('input[name=login_username_text]');
+        this.password_input = document.querySelector('input[name=login_password_text]');
         this.sign_in_button = document.querySelector('button[name=login_submit_button]');
 
         firebase.initializeApp({
@@ -20,13 +22,31 @@ class Roomchata {
         this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
     }
 
-    signIn(email, password) {
-        if (email.split('@').length !== 2) {
-            alert('Please enter a valid email.');
+    signIn(evt) {
+        evt.preventDefault();
+
+        if (this.email_input.split('@').length !== 2 ||
+            this.username_input.value.length <= 1 ||
+            this.password_input.value.length <= 1) {
+            alert('Please enter a valid email, username, or password.');
         } else {
-            this.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+            this.auth.signInWithEmailAndPassword(this.email_input.value, this.password_input.value).catch(function(error) {
                 alert(error.message);
             });
+        }
+    }
+
+    signUp(evt) {
+        evt.preventDefault();
+
+        if (this.email_input.split('@').length !== 2 ||
+            this.username_input.value.length <= 1 ||
+            this.password_input.value.length <= 1) {
+            alert('Please enter a valid email, username, or password.');
+        } else {
+            this.auth.createUserWithEmailAndPassword(this.email_input.value, this.password_input.value).catch(function (error) {
+                alert(error.message);
+            })
         }
     }
 

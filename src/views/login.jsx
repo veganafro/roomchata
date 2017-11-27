@@ -18,6 +18,14 @@ class Login extends React.Component {
                 </input>
                 <br></br>
                 <input
+                    className='login_email_input'
+                    type='text'
+                    name='login_email_text'
+                    placeholder='email address...'
+                    value={this.props.login_email_text}>
+                </input>
+                <br></br>
+                <input
                     className='login_password_input'
                     type='password'
                     name='login_password_text'
