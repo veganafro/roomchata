@@ -33,7 +33,7 @@ class Roomchata {
 
     onAuthStateChanged(user) {
         if (user) {
-            let profile_pic = user.photoURL;
+            let profile_pic = user.photoUrl;
             let user_name = user.displayName;
 
             // do stuff to update the client side's profile picture and username
@@ -54,6 +54,19 @@ class Roomchata {
         }
         alert('You must sign in first');
         return false;
+    }
+
+    loadMessages() {
+        this.messages_reference = this.database.ref('messages');
+        this.messages_reference.off();
+
+        const set_message = function(data) {
+            const value = data.val();
+            this.displayMessage(data.key, value.name, value.text, value.photoUrl, value.imageUrl);
+        }.bind(this);
+
+        this.messages_reference.limitToLast(10).on('child_added', set_message);
+        this.messages_reference.limitToLast(10).on('child_changed', set_message);
     }
 }
 
