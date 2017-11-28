@@ -62,3 +62,11 @@ function checkSignedInWithMessage(auth) {
     alert('You must sign in first');
     return false;
 }
+
+module.exports = {
+    signIn: signIn,
+    signUp: signUp,
+    signOut: signOut,
+    onAuthStateChanged: onAuthStateChanged,
+    checkSignedInWithMessage: checkSignedInWithMessage,
+};
