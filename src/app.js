@@ -4,7 +4,6 @@ const firebase = require('firebase');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const react_views = require('express-react-views');
-// const Roomchata = require('./scripts/main').Roomchata;
 
 const session_options = {
     secret: 'a secret',
@@ -17,8 +16,6 @@ const app = express();
 if (app.settings.env === 'development') {
     require('dotenv').config();
 }
-
-// const firebase_client = new Roomchata();
 
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, 'views'));

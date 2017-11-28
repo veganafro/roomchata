@@ -31,6 +31,7 @@ class Roomchata {
             alert('Please enter a valid email, username, or password.');
         } else {
             this.auth.signInWithEmailAndPassword(this.email_input.value, this.password_input.value).catch(function(error) {
+                console.log(error.message);
                 alert(error.message);
             });
         }
@@ -45,6 +46,7 @@ class Roomchata {
             alert('Please enter a valid email, username, or password.');
         } else {
             this.auth.createUserWithEmailAndPassword(this.email_input.value, this.password_input.value).catch(function (error) {
+                console.log(error.message);
                 alert(error.message);
             });
         }
@@ -64,9 +66,9 @@ class Roomchata {
             this.loadMessages();
             this.saveMessagingDeviceToken();
         } else {
-            // this.user_pic.setAttribute('hidden', 'true');
-            // this.username.setAttribute('hidden', 'true');
-            // this.sign_out_button.setAttribute('hidden', 'true');
+            this.user_pic.setAttribute('hidden', 'true');
+            this.username.setAttribute('hidden', 'true');
+            this.sign_out_button.setAttribute('hidden', 'true');
             this.sign_in_button.removeAttribute('hidden');
         }
     }
@@ -157,8 +159,4 @@ class Roomchata {
 
 window.onload = function() {
     window.roomchata = new Roomchata();
-};
-
-module.exports = {
-    Roomchata: Roomchata,
 };
