@@ -5,7 +5,7 @@ module.exports = function(passport) {
         done(null, user.id);
     });
 
-    passport.deserializeUser(function(id, done) {
+    passport.deserializeUser(function(user, done) {
         done(null, user);
     });
 };
