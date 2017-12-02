@@ -158,5 +158,5 @@ class Roomchata {
 }
 
 window.onload = function() {
-    window.roomchata = new Roomchata();
+    // window.roomchata = new Roomchata();
 };
