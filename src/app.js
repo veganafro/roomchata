@@ -2,13 +2,14 @@ require('firebase/storage');
 const path = require('path');
 const express = require('express');
 const firebase = require('firebase');
+const passport = require('passport');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
 const react_views = require('express-react-views');
 
 const session_options = {
-    secret: 'a secret',
+    secret: 'secretsdontmakefriendsfriendsmakesecrets',
     saveUninitialized: false,
     resave: false
 };
@@ -28,15 +29,16 @@ firebase.initializeApp({
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
 });
 
-const storage = firebase.storage();
-const database = firebase.database();
-
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(cookie_parser());
-app.use(session(session_options));
 app.use(body_parser.urlencoded({extended: false}));
+
+app.use(session(session_options));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 
