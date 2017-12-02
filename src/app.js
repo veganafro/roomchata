@@ -1,8 +1,7 @@
-require('firebase/storage');
 const path = require('path');
 const express = require('express');
-const firebase = require('firebase');
 const passport = require('passport');
+const admin = require('firebase-admin');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
@@ -20,13 +19,13 @@ if (app.settings.env === 'development') {
     require('dotenv').config();
 }
 
-firebase.initializeApp({
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+admin.initializeApp({
+    credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL
+    }),
+    databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 
 app.set('view engine', 'jsx');
@@ -38,6 +37,16 @@ app.use(body_parser.urlencoded({extended: false}));
 app.use(session(session_options));
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+
+});
+
 
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));

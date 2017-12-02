@@ -10,14 +10,6 @@ class Login extends React.Component {
             <form method='POST'
                 name='login_form'>
                 <input
-                    className='login_username_input'
-                    type='text'
-                    name='login_username_text'
-                    placeholder='username...'
-                    value={this.props.login_username_text}>
-                </input>
-                <br></br>
-                <input
                     className='login_email_input'
                     type='text'
                     name='login_email_text'
