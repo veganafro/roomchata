@@ -44,12 +44,20 @@ app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
     console.log('$$$ args at serializeUser', arguments);
-    done(null, user);
+    done(null, user.id);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function(user_id, done) {
     console.log('$$$ args at deserializeUser', arguments);
-    done(null, user);
+
+    admin.database().ref('/users').child(user_id).once('value')
+        .then(function(snapshot) {
+            console.log('$$$ successfully deserialized a user', snapshot.val());
+            done(null, snapshot.val());
+        }).catch(function(error) {
+            console.log('$$$ could not deserialize user', error);
+            done(error, {});
+        });
 });
 
 passport.use('local-signup', new LocalStrategy({
@@ -97,7 +105,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/search', function(request, response) {
-    response.render('search', {search_bar_text: request.user.username});
+    response.render('search', {search_bar_text: request.user.email});
 });
 
 app.get('/room', function(request, response) {
