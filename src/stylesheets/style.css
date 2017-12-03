@@ -38,7 +38,7 @@ button[name*=login] {
 }
 
 #message-form .mdl-textfield {
-    width: calc(80vw);
+    width: calc(50vw);
 }
 
 #message-form button {
