@@ -139,7 +139,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/search', function(request, response) {
-    response.render('search', {search_bar_text: request.user.email});
+    response.render('search');
 });
 
 app.get('/room', function(request, response) {
