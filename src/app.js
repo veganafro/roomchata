@@ -7,6 +7,7 @@ const admin = require('firebase-admin');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
+const cookie_encrypt = require('cookie-encrypter');
 const react_views = require('express-react-views');
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -34,7 +35,8 @@ admin.initializeApp({
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(cookie_parser());
+app.use(cookie_parser('giveyourgfanideaofwhatyouwantforchristmas69'));
+app.use(cookie_encrypt('giveyourgfanideaofwhatyouwantforchristmas69'));
 app.use(body_parser.urlencoded({extended: false}));
 
 app.use(session(session_options));
@@ -160,5 +162,5 @@ app.post('/search', function(request, response) {
 });
 
 app.listen(process.env.PORT || 3000, function() {
-    console.log('Listening on port', this.address().port, 'in context', app.settings.env);
+    console.log('Listening on port', this.address().port, 'in context', app.settings.env, 'and address', this.address());
 });
