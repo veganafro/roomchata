@@ -148,6 +148,13 @@ app.get('/room', function(request, response) {
 
 });
 
+app.get('/logout', function(request, response) {
+    request.logout();
+    request.session.destroy(function(error) {
+        response.redirect('/');
+    });
+});
+
 app.post('/signin', passport.authenticate('local-signin'), function(request, response) {
     response.redirect('/search');
 });
