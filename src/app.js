@@ -42,6 +42,7 @@ app.use(body_parser.urlencoded({extended: false}));
 
 // app.use(session(session_options));
 app.use(cookie_session({
+    secret: 'secretsdontmakefriendsfriendsmakesecrets',
     maxAge: 24 * 60 * 60 * 1000
 }));
 app.use(passport.initialize());
