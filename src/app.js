@@ -89,6 +89,9 @@ passport.use('local-signup', new LocalStrategy({
                         console.log('$$$ tried to create already existing user', snapshot.val());
                         return done(null, false);
                     }
+                }).catch(function(error) {
+                    console.log('$$$ a database error occurred when creating user', error);
+                    return done(error);
                 });
         });
     }
@@ -100,7 +103,28 @@ passport.use('local-signin', new LocalStrategy({
         passReqToCallback: true
     },
     function(req, email, password, done) {
-        
+        process.nextTick(function() {
+            admin.database().ref('/users').child(md5(email)).once('value')
+                .then(function(snapshot) {
+                    if (!snapshot.val()) {
+                        console.log('$$$ could not find user with email', snapshot);
+                        return done(null, false);
+                    }
+
+                    const user = snapshot.val();
+
+                    if (bcrypt.compareSync(password, user.marinade)) {
+                        console.log('$$$ successfully logged in', user);
+                        return done(null, user);
+                    }
+
+                    console.log('$$$ wrong password was entered', user);
+                    return done(null, false);
+                }).catch(function(error) {
+                    console.log('$$$ a database error occurred when searching for a user', error);
+                    return done(error);
+                });
+        });
     }
 ))
 
@@ -120,6 +144,10 @@ app.get('/search', function(request, response) {
 
 app.get('/room', function(request, response) {
 
+});
+
+app.post('/signin', passport.authenticate('local-signin'), function(request, response) {
+    response.redirect('/search');
 });
 
 app.post('/signup', passport.authenticate('local-signup'), function(request, response) {

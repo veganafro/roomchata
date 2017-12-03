@@ -28,6 +28,7 @@ class Login extends React.Component {
                 <button
                     className='login_sign_in_submit_input'
                     type='submit'
+                    formAction='/signin'
                     name='login_submit_button'>
                     log in
                 </button>
