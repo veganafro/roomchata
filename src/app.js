@@ -135,6 +135,7 @@ app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 app.engine('jsx', react_views.createEngine());
 
 app.get('/', function(request, response) {
+    console.log('$$$ here is admin', admin.app());
     response.render('login');
 });
 
