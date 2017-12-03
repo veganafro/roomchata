@@ -24,7 +24,7 @@ button[name*=login] {
 }
 
 #page-content {
-    height: calc(100vh) !important;
+    height: calc(80vh) !important;
 }
 
 #messages {
