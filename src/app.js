@@ -4,8 +4,9 @@ const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
-const session = require('express-session');
+// const session = require('express-session');
 const body_parser = require('body-parser');
+const cookie_session = require('cookie-session');
 const cookie_parser = require('cookie-parser');
 const cookie_encrypt = require('cookie-encrypter');
 const react_views = require('express-react-views');
@@ -39,7 +40,10 @@ app.use(cookie_parser('giveyourgfanideaofwhatyouwantforchristmas69'));
 app.use(cookie_encrypt('giveyourgfanideaofwhatyouwantforchristmas69'));
 app.use(body_parser.urlencoded({extended: false}));
 
-app.use(session(session_options));
+// app.use(session(session_options));
+app.use(cookie_session({
+    maxAge: 24 * 60 * 60 * 1000
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
