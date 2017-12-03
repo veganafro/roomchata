@@ -12,6 +12,9 @@ class Base extends React.Component {
 
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"></link>
                 <link rel="stylesheet" href="stylesheets/style.css"></link>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></link>
+                <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"></link>
+                <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
             </head>
             <body>
                 {this.props.children}
