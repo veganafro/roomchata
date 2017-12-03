@@ -4,19 +4,12 @@ const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
-// const session = require('express-session');
 const body_parser = require('body-parser');
-const cookie_session = require('cookie-session');
 const cookie_parser = require('cookie-parser');
+const cookie_session = require('cookie-session');
 const cookie_encrypt = require('cookie-encrypter');
 const react_views = require('express-react-views');
 const LocalStrategy = require('passport-local').Strategy;
-
-const session_options = {
-    secret: 'secretsdontmakefriendsfriendsmakesecrets',
-    saveUninitialized: false,
-    resave: false
-};
 
 const app = express();
 
@@ -40,7 +33,6 @@ app.use(cookie_parser('giveyourgfanideaofwhatyouwantforchristmas69'));
 app.use(cookie_encrypt('giveyourgfanideaofwhatyouwantforchristmas69'));
 app.use(body_parser.urlencoded({extended: false}));
 
-// app.use(session(session_options));
 app.use(cookie_session({
     secret: 'secretsdontmakefriendsfriendsmakesecrets',
     maxAge: 24 * 60 * 60 * 1000
@@ -167,5 +159,5 @@ app.post('/search', function(request, response) {
 });
 
 app.listen(process.env.PORT || 3000, function() {
-    console.log('Listening on port', this.address().port, 'in context', app.settings.env, 'and address', this.address());
+    console.log('Listening on port', this.address().port, 'in context', app.settings.env);
 });
