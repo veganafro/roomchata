@@ -36,3 +36,13 @@ button[name*=login] {
 #enter_message_form {
     height: calc(10vh) !important;
 }
+
+#message-form .mdl-textfield {
+    width: calc(80vw);
+}
+
+#message-form button {
+    width: calc(10vw);
+    margin: 0 0 0 10px;
+    padding: 0 0 0 0;
+}

@@ -24,7 +24,7 @@ class Home extends React.Component {
                     </div>
                 </header>
                 <div className="mdl-layout__drawer">
-                    <span className="mdl-layout-title">Title</span>
+                    <span className="mdl-layout-title">roomchata</span>
                     <nav className="mdl-navigation">
                         <a className="mdl-navigation__link" href="">Link</a>
                         <a className="mdl-navigation__link" href="">Link</a>
