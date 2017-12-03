@@ -32,6 +32,7 @@
     "firebase-admin": "^5.5.1",
     "jsx": "^0.9.89",
     "md5": "^2.2.1",
+    "memorystore": "^1.6.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",

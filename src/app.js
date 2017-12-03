@@ -8,6 +8,7 @@ const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
 const react_views = require('express-react-views');
+const memorystore = require('memorystore')(session);
 const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
@@ -35,9 +36,9 @@ app.use(session({
     secret: 'secretsdontmakefriendsfriendsmakesecrets',
     saveUninitialized: false,
     resave: false,
-    cookie: {
-        maxAge: 24 * 60 * 60 * 1000
-    }
+    store: new memorystore({
+        checkPeriod: 24 * 60 * 60 * 1000
+    })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -136,7 +137,6 @@ app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 app.engine('jsx', react_views.createEngine());
 
 app.get('/', function(request, response) {
-    console.log(request.user);
     response.render('login');
 });
 
