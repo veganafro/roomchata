@@ -1,13 +1,12 @@
 const md5 = require('md5');
 const path = require('path');
-const cookie_session = require('cookie-session');
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
+const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
-const cookie_encrypt = require('cookie-encrypter');
 const react_views = require('express-react-views');
 const LocalStrategy = require('passport-local').Strategy;
 
@@ -29,13 +28,16 @@ admin.initializeApp({
 app.set('view engine', 'jsx');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(cookie_parser('giveyourgfanideaofwhatyouwantforchristmas69'));
-app.use(cookie_encrypt('giveyourgfanideaofwhatyouwantforchristmas69'));
+app.use(cookie_parser());
 app.use(body_parser.urlencoded({extended: false}));
 
-app.use(cookie_session({
+app.use(session({
     secret: 'secretsdontmakefriendsfriendsmakesecrets',
-    maxAge: 24 * 60 * 60 * 1000
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -134,6 +136,7 @@ app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 app.engine('jsx', react_views.createEngine());
 
 app.get('/', function(request, response) {
+    console.log(request.user);
     response.render('login');
 });
 
