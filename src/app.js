@@ -1,11 +1,14 @@
+const md5 = require('md5');
 const path = require('path');
 const express = require('express');
 const passport = require('passport');
+const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
 const session = require('express-session');
 const body_parser = require('body-parser');
 const cookie_parser = require('cookie-parser');
 const react_views = require('express-react-views');
+const LocalStrategy = require('passport-local').Strategy;
 
 const session_options = {
     secret: 'secretsdontmakefriendsfriendsmakesecrets',
@@ -40,12 +43,48 @@ app.use(passport.session());
 
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    console.log('$$$ args at serializeUser', arguments);
+    done(null, user);
 });
 
-passport.deserializeUser(function(id, done) {
-
+passport.deserializeUser(function(user, done) {
+    console.log('$$$ args at deserializeUser', arguments);
+    done(null, user);
 });
+
+passport.use('local-signup', new LocalStrategy({
+        usernameField: 'login_email_text',
+        passwordField: 'login_password_text',
+        passReqToCallback: true
+    },
+    function(req, email, password, done) {
+        process.nextTick(function() {
+            admin.database().ref('/users').child(md5(email)).once('value')
+                .then(function(snapshot) {
+                    // will return `true` if snapshot.val() is `null` and email address isn't taken
+                    if (!snapshot.val()) {
+                        const new_user = {
+                            id: md5(email),
+                            email: email,
+                            marinade: bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+                        };
+
+                        admin.database().ref('/users').child(md5(email)).set(new_user)
+                            .then(function(data) {
+                                console.log('$$$ successfully created user', data);
+                                return done(null, new_user);
+                            }).catch(function(error) {
+                                console.log('$$$ did not create new user', error);
+                                return done(error)
+                            });
+                    } else {
+                        console.log('$$$ tried to create already existing user', snapshot.val());
+                        return done(null, false);
+                    }
+                });
+        });
+    }
+));
 
 
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
@@ -58,16 +97,15 @@ app.get('/', function(request, response) {
 });
 
 app.get('/search', function(request, response) {
-    response.render('search');
+    response.render('search', {search_bar_text: request.user.username});
 });
 
 app.get('/room', function(request, response) {
 
 });
 
-app.post('/', function(request, response) {
-    const email = request.body.login_email_text;
-    const password = request.body.login_password_text;
+app.post('/', passport.authenticate('local-signup'), function(request, response) {
+    response.redirect('/search');
 });
 
 app.post('/search', function(request, response) {

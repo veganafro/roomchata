@@ -5,6 +5,7 @@ const Base = require('./base');
 class SearchBar extends React.Component {
     render() {
         return (
+            console.log('$$$ search bar text value', this.props.search_bar_text),
             <form method='POST'>
                 <input
                     className='search_bar_input'
