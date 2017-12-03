@@ -30,7 +30,7 @@ button[name*=login] {
 #messages {
     overflow-y: scroll;
     margin-bottom: 10px;
-    height: calc(90vh) !important;
+    height: calc(70vh) !important;
 }
 
 #enter_message_form {
