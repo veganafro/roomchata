@@ -94,6 +94,16 @@ passport.use('local-signup', new LocalStrategy({
     }
 ));
 
+passport.use('local-signin', new LocalStrategy({
+        usernameField: 'login_email_text',
+        passwordField: 'login_password_text',
+        passReqToCallback: true
+    },
+    function(req, email, password, done) {
+        
+    }
+))
+
 
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
 app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
@@ -112,7 +122,7 @@ app.get('/room', function(request, response) {
 
 });
 
-app.post('/', passport.authenticate('local-signup'), function(request, response) {
+app.post('/signup', passport.authenticate('local-signup'), function(request, response) {
     response.redirect('/search');
 });
 

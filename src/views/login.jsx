@@ -34,6 +34,7 @@ class Login extends React.Component {
                 <button
                     className='login_sing_up_submit_input'
                     type='submit'
+                    formAction='/signup'
                     name='login_submit_button'>
                     sign up
                 </button>
