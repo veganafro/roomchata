@@ -76,6 +76,7 @@ function successfullyConnectUsers(request) {
 
         alert(response.success);
     }
+    document.querySelector('input[name=search]').value = "";
 }
 
 function makeNodeWithType(type) {
