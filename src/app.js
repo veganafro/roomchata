@@ -76,7 +76,8 @@ passport.use('local-signup', new LocalStrategy({
                         const new_user = {
                             id: md5(email),
                             email: email,
-                            marinade: bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+                            marinade: bcrypt.hashSync(password, bcrypt.genSaltSync(8), null),
+                            conversations: {}
                         };
 
                         admin.database().ref('/users').child(md5(email)).set(new_user)
@@ -148,8 +149,8 @@ app.get('/', function(request, response) {
     response.render('login');
 });
 
-app.get('/home', function(request, response) {
-    if (request.session.passport) {
+app.get('/home', checkAuth, function(request, response) {
+    if (request.session.passport.user.conversations) {
         const users_to_lookup = Object.keys(request.session.passport.user.conversations);
 
         const promises = users_to_lookup.map(function(user_id) {
@@ -162,12 +163,18 @@ app.get('/home', function(request, response) {
             response.render('home', {conversation_counterparts: user_display_names});
         });
     } else {
-        response.redirect('/');
+        response.render('home', {conversation_counterparts: []});
     }
 });
 
-app.get('/room', function(request, response) {
-
+app.get('/room', checkAuth, function(request, response) {
+    console.log('$$$ INCOMING REQUEST', request.isAuthenticated());
+    if (request.session.passport) {
+        console.log('$$$ REQUEST COMING FROM', request.session.passport.user);
+    } else {
+        console.log('$$$ REQUEST IS UNAUTHENTICATED');
+    }
+    response.send({herp: 'derp'});
 });
 
 app.get('/logout', function(request, response) {

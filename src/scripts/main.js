@@ -1,26 +1,4 @@
-require('firebase/storage');
-const firebase = require('firebase');
-
 class Roomchata {
-    constructor() {
-        this.email_input = document.querySelector('input[name=login_email_text]');
-        this.username_input = document.querySelector('input[name=login_username_text]');
-        this.password_input = document.querySelector('input[name=login_password_text]');
-        this.sign_in_button = document.querySelector('button[name=login_submit_button]');
-
-        firebase.initializeApp({
-            apiKey: process.env.FIREBASE_API_KEY,
-            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-            databaseURL: process.env.FIREBASE_DATABASE_URL,
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
-        });
-        this.auth = firebase.auth();
-        this.storage = firebase.storage();
-        this.database = firebase.database();
-        this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
-    }
 
     loadMessages() {
         this.messages_reference = this.database.ref('messages');
@@ -56,5 +34,14 @@ class Roomchata {
 }
 
 window.onload = function() {
-    // window.roomchata = new Roomchata();
+    console.log('$$$ RUNNING IN MAIN');
+    const request = new XMLHttpRequest();
+    request.open('GET', '/room');
+    request.addEventListener('load', function() {
+        console.log('$$$ GOT A RESPONSE FROM ROOMS', request.responseText);
+    });
+    request.addEventListener('error', function(error) {
+        console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);
+    });
+    request.send();
 };

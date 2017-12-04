@@ -6,12 +6,17 @@ const Header = require('./header');
 const Drawer = require('./drawer');
 
 class Home extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {conversation_counterparts: this.props.conversation_counterparts};
+    }
+
     render() {
         return (
             <Base title='Home'>
             <div className="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
                 <Header></Header>
-                <Drawer conversations={this.props.conversation_counterparts}></Drawer>
+                <Drawer conversations={this.state.conversation_counterparts}></Drawer>
                 <Chat></Chat>
             </div>
             </Base>
