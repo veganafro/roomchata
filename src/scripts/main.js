@@ -54,7 +54,10 @@ function handleSearchSubmitted(evt) {
         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
         request.addEventListener('load', function() {
-            console.log('$$$ GOT A RESPONSE FROM ROOMS');
+            const response = JSON.parse(request.response);
+            if (response.hasOwnProperty('error')) {
+                alert(response.error);
+            }
         });
         request.addEventListener('error', function(error) {
             console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);

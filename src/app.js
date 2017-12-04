@@ -168,14 +168,18 @@ app.get('/home', checkAuth, function(request, response) {
 });
 
 app.post('/room', checkAuth, function(request, response) {
-    console.log('$$$ INCOMING REQUEST', request.isAuthenticated());
-    if (request.session.passport) {
-        console.log('$$$ REQUEST COMING FROM', request.session.passport.user);
-        console.log('$$$ REQUEST BODY CONTAINS', request.body);
-    } else {
-        console.log('$$$ REQUEST IS UNAUTHENTICATED');
-    }
-    response.send({herp: 'derp'});
+    console.log('$$$ REQUEST COMING FROM', request.session.passport.user);
+    console.log('$$$ REQUEST BODY CONTAINS', request.body);
+
+    admin.database().ref('/users').child(md5(request.body.search_query)).once('value')
+        .then(function(snapshot) {
+            if (!snapshot.val()) {
+                console.log('$$$ YOU CANNOT CHAT WITH NON EXISTENT USERS');
+                response.send({error: 'You cannot chat with nonexistent users.'});
+                return;
+            }
+            console.log('$$$ SOMETHING PRINTED AFTER SENDING');
+        });
 });
 
 app.get('/logout', function(request, response) {
