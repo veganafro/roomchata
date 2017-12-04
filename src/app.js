@@ -17,6 +17,9 @@ if (app.settings.env === 'development') {
     require('dotenv').config();
 }
 
+const http = require('http').Server(app);
+const socket = require('socket.io')(http);
+
 admin.initializeApp({
     credential: admin.credential.cert({
         projectId: process.env.FIREBASE_PROJECT_ID,
@@ -237,6 +240,6 @@ app.post('/home', function(request, response) {
     response.redirect('/home');
 });
 
-app.listen(process.env.PORT || 3000, function() {
+http.listen(process.env.PORT || 3000, function() {
     console.log('Listening on port', this.address().port, 'in context', app.settings.env);
 });
