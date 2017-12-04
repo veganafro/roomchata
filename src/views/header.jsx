@@ -12,7 +12,7 @@ class Header extends React.Component {
                             <i className="material-icons">search</i>
                         </label>
                         <div className="mdl-textfield__expandable-holder">
-                            <input className="mdl-textfield__input" type="text" name="sample"
+                            <input className="mdl-textfield__input" type="text" name="search"
                                 id="fixed-header-drawer-exp">
                             </input>
                         </div>

@@ -3,12 +3,6 @@ const React = require('react');
 class Drawer extends React.Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(evt) {
-        evt.preventDefault();
-        console.log('$$$ a link was clicked', evt);
     }
 
     render() {
@@ -19,6 +13,7 @@ class Drawer extends React.Component {
                     {this.props.conversations.map(user => (
                         <a className="mdl-navigation__link" href="" key={user.email}>{user.email}</a>
                     ))}
+                    <a className="mdl-navigation__link" href="/logout">Logout</a>
                 </nav>
             </div>
         );

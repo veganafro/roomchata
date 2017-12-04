@@ -131,6 +131,7 @@ passport.use('local-signin', new LocalStrategy({
 ));
 
 app.use(function (request, response, next) {
+    console.log('$$$ request auth status', request.isAuthenticated());
     next();
 });
 
