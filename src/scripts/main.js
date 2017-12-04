@@ -36,9 +36,21 @@ class Roomchata {
 window.onload = function() {
     console.log('$$$ RUNNING IN MAIN');
 
+    const socket = io();
+
     const search = document.querySelector('form[name=search]');
     search.addEventListener('submit', handleSearchSubmitted);
+
+    const current_connections = document.querySelectorAll('a[class=mdl-navigation__link]');
+    current_connections.forEach(function(connection) {
+        connection.addEventListener('click', handleConnectionChosen);
+    });
 };
+
+function handleConnectionChosen(evt) {
+    evt.preventDefault();
+    console.log('$$$ USER CLICKED ON', evt.target);
+}
 
 function handleSearchSubmitted(evt) {
     evt.preventDefault();

@@ -18,7 +18,7 @@ if (app.settings.env === 'development') {
 }
 
 const http = require('http').Server(app);
-const socket = require('socket.io')(http);
+const io = require('socket.io')(http);
 
 admin.initializeApp({
     credential: admin.credential.cert({
@@ -133,6 +133,10 @@ passport.use('local-signin', new LocalStrategy({
         });
     }
 ));
+
+io.on('connection', function(socket) {
+    console.log('$$$ SUCCESSFULLY CONNECTED SOCKET IO');
+});
 
 function checkAuth(request, response, next) {
     if (request.isAuthenticated()) {
