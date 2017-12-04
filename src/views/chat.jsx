@@ -10,7 +10,7 @@ class Chat extends React.Component {
                     </div>
                     <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop"
                         id="enter_message_form">
-                        <form id="message-form" action="/">
+                        <form id="message-form">
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input className="mdl-textfield__input" type="text" id="message" name="new_message_text"></input>
                             </div>
