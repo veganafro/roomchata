@@ -13,7 +13,7 @@ class Drawer extends React.Component {
                     {this.props.conversations.map(user => (
                         <a className="mdl-navigation__link" href="" key={user.email}>{user.email}</a>
                     ))}
-                    <a className="mdl-navigation__link" href="/logout">Logout</a>
+                    <a className="mdl-navigation__link" key="logout" href="/logout">Logout</a>
                 </nav>
             </div>
         );
