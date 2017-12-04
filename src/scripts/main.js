@@ -84,6 +84,7 @@ function successfullyConnectUsers(request) {
 
         added_connection.setAttribute('href', "");
         added_connection.classList.add('mdl-navigation__link');
+        added_connection.addEventListener(handleConnectionChosen);
         connections_list.insertBefore(added_connection, connections_list.firstChild);
 
         alert(response.success);
