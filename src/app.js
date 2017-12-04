@@ -168,9 +168,6 @@ app.get('/home', checkAuth, function(request, response) {
 });
 
 app.post('/room', checkAuth, function(request, response) {
-    console.log('$$$ REQUEST COMING FROM', request.session.passport.user);
-    console.log('$$$ REQUEST BODY CONTAINS', request.body);
-
     const current_user = request.session.passport.user;
     const submitted_value = request.body.search_query;
 
@@ -202,8 +199,7 @@ app.post('/room', checkAuth, function(request, response) {
 
             Promise.all(promises).then(function(snapshots) {
                 console.log('$$$ SUCCESSFULLY CONNECTED USERS');
-                current_user.conversations[counterpart.id] = true;
-                response.send({success: `Successfully connect you to ${counterpart.email}.`});
+                response.send({success: `Successfully connected you to ${counterpart.email}.`});
             });
         }).catch(function(error) {
             console.log('$$$ A DATABASE ERROR OCCURRED WHILE LOOKING FOR A USER');
