@@ -19,6 +19,7 @@ class Base extends React.Component {
             </head>
             <body>
                 {this.props.children}
+                <script src="/socket.io/socket.io.js"></script>
                 <script src="scripts/bundle.js"></script>
                 <script src='scripts/main.js'></script>
             </body>
