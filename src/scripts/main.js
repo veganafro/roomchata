@@ -44,4 +44,12 @@ window.onload = function() {
         console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);
     });
     request.send();
+
+    const search = document.querySelector('form[name=search]');
+    search.addEventListener('submit', handleSearchSubmitted);
 };
+
+function handleSearchSubmitted(evt) {
+    evt.preventDefault();
+    console.log('$$$ SEARCH WAS SUBMITTED');
+}
