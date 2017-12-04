@@ -150,35 +150,36 @@ app.get('/', function(request, response) {
 });
 
 app.get('/home', checkAuth, function(request, response) {
-    if (request.session.passport.user.conversations) {
-        const users_to_lookup = Object.keys(request.session.passport.user.conversations);
+    const current_user = request.session.passport.user;
 
-        const promises = users_to_lookup.map(function(user_id) {
-            return admin.database().ref('/users').child(user_id).once('value');
-        });
-        Promise.all(promises).then(function(snapshots) {
-            const user_display_names = snapshots.map(function(snapshot) {
-                return {email: snapshot.val().email};
+    admin.database().ref('/users').child(current_user.id).child('conversations').once('value')
+        .then(function(active_chats) {
+            if (!active_chats.val()) {
+                console.log('$$$ USER DID NOT HAVE ANY ACTIVE CHATS');
+                response.render('home', {conversation_counterparts: []});
+                return;
+            }
+
+            const users_to_lookup = Object.keys(active_chats.val());
+
+            const promises = users_to_lookup.map(function(user_id) {
+                return admin.database().ref('/users').child(user_id).once('value');
             });
-            response.render('home', {conversation_counterparts: user_display_names});
+            Promise.all(promises).then(function(snapshots) {
+                const user_display_names = snapshots.map(function(snapshot) {
+                    return {email: snapshot.val().email};
+                });
+                response.render('home', {conversation_counterparts: user_display_names});
+            });
+        }).catch(function(error) {
+            console.log('$$$ SOMETHING WENT WRONG WHEN LOOKING IN THE DATABASE', error);
+            response.redirect('/');
         });
-    } else {
-        response.render('home', {conversation_counterparts: []});
-    }
 });
 
-app.post('/room', checkAuth, function(request, response) {
+app.post('/connect', checkAuth, function(request, response) {
     const current_user = request.session.passport.user;
     const submitted_value = request.body.search_query;
-
-    // you're already chatting with this person, don't look in the database
-    if (current_user.hasOwnProperty('conversations')) {
-        if (current_user.conversations.hasOwnProperty(md5(submitted_value))) {
-            console.log('$$$ YOU CANNOT RECREATE CHATS');
-            response.send({error: 'You cannot recreate existing chats'});
-            return;
-        }
-    }
 
     admin.database().ref('/users').child(md5(submitted_value)).once('value')
         .then(function(snapshot) {
@@ -189,6 +190,13 @@ app.post('/room', checkAuth, function(request, response) {
             }
 
             const counterpart = snapshot.val();
+            // you're already chatting with this person, don't update the database
+            if (counterpart.conversations.hasOwnProperty(current_user.id)) {
+                console.log('$$$ YOU CANNOT RECREATE CHATS');
+                response.send({error: 'You cannot recreate existing chats'});
+                return;
+            }
+
             const users_to_connect = [counterpart.id, current_user.id];
 
             const promises = users_to_connect.map(function(user_id, index) {
@@ -199,10 +207,13 @@ app.post('/room', checkAuth, function(request, response) {
 
             Promise.all(promises).then(function(snapshots) {
                 console.log('$$$ SUCCESSFULLY CONNECTED USERS');
-                response.send({success: `Successfully connected you to ${counterpart.email}.`});
+                response.send({
+                    success: `Successfully connected you to ${counterpart.email}.`,
+                    connection: counterpart.email
+                });
             });
         }).catch(function(error) {
-            console.log('$$$ A DATABASE ERROR OCCURRED WHILE LOOKING FOR A USER');
+            console.log('$$$ A DATABASE ERROR OCCURRED WHILE LOOKING FOR A USER', error);
             response.send({error: 'A database error occurred while looking for a user.'});
         });
 });

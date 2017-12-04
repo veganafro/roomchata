@@ -50,23 +50,45 @@ function handleSearchSubmitted(evt) {
         console.log('$$$ user tried to submit empty search');
     } else {
         const request = new XMLHttpRequest();
-        request.open('POST', '/room', true);
+        request.open('POST', '/connect', true);
         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-        request.addEventListener('load', function() {
-            const response = JSON.parse(request.response);
-            if (response.hasOwnProperty('error')) {
-                alert(response.error);
-            } else {
-                alert(response.success);
-            }
-        });
+        request.addEventListener('load', successfullyConnectUsers.bind(null, request));
         request.addEventListener('error', function(error) {
             console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);
         });
 
         request.send(`search_query=${search_query.value}`);
     }
+}
+
+function successfullyConnectUsers(request) {
+    const response = JSON.parse(request.response);
+    if (response.hasOwnProperty('error')) {
+        alert(response.error);
+    } else {
+        const connections_list = document.querySelector('.mdl-navigation');
+        const added_connection = makeNodeWithType('a', response.connection);
+
+        added_connection.setAttribute('href', "");
+        added_connection.classList.add('mdl-navigation__link');
+        connections_list.insertBefore(added_connection, connections_list.firstChild);
+
+        alert(response.success);
+    }
+}
+
+function makeNodeWithType(type) {
+    let node = document.createElement(type);
+    for (let index = 1; index < arguments.length; index += 1) {
+        let child = arguments[index];
+
+        if (typeof child === 'string') {
+            child = document.createTextNode(child);
+        }
+        node.appendChild(child);
+    }
+    return node;
 }
 
 function isEmpty(value) {
