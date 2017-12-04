@@ -57,6 +57,8 @@ function handleSearchSubmitted(evt) {
             const response = JSON.parse(request.response);
             if (response.hasOwnProperty('error')) {
                 alert(response.error);
+            } else {
+                alert(response.success);
             }
         });
         request.addEventListener('error', function(error) {
