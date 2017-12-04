@@ -35,14 +35,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cookie_parser());
 app.use(body_parser.urlencoded({extended: false}));
 
-app.use(session({
+const session_middleware = session({
     secret: 'secretsdontmakefriendsfriendsmakesecrets',
     saveUninitialized: false,
     resave: false,
     store: new memorystore({
         checkPeriod: 24 * 60 * 60 * 1000
     })
-}));
+});
+
+app.use(session_middleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -134,8 +136,15 @@ passport.use('local-signin', new LocalStrategy({
     }
 ));
 
+io.use(function(socket, next) {
+    session_middleware(socket.request, {}, next);
+});
+
 io.on('connection', function(socket) {
-    console.log('$$$ SUCCESSFULLY CONNECTED SOCKET IO');
+    socket.on('open_conversation', function(data) {
+        socket.request.session.passport.user.open_conversation = data;
+        io.sockets.connected[socket.id].emit('show_conversation', data);
+    });
 });
 
 function checkAuth(request, response, next) {

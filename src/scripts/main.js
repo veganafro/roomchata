@@ -41,7 +41,7 @@ window.onload = function() {
     const search = document.querySelector('form[name=search]');
     search.addEventListener('submit', handleSearchSubmitted);
 
-    const current_connections = document.querySelectorAll('a[class=mdl-navigation__link]');
+    const current_connections = document.querySelectorAll('a[class*=conversations]');
     current_connections.forEach(function(connection) {
         connection.addEventListener('click', handleConnectionChosen);
     });
@@ -49,8 +49,13 @@ window.onload = function() {
 
 function handleConnectionChosen(evt) {
     evt.preventDefault();
-    console.log('$$$ USER CLICKED ON', evt.target);
+    const selected_user = evt.target;
+    socket.emit('open_conversation', selected_user.textContent);
 }
+
+socket.on('show_conversation', function(data) {
+    alert(data);
+});
 
 function handleSearchSubmitted(evt) {
     evt.preventDefault();

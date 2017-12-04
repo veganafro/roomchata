@@ -7,7 +7,7 @@ class Drawer extends React.Component {
                 <span className="mdl-layout-title">roomchata</span>
                 <nav className="mdl-navigation">
                     {this.props.conversations.map(user => (
-                        <a className="mdl-navigation__link" href="" key={user.email}>{user.email}</a>
+                        <a className="mdl-navigation__link conversations" href="" key={user.email}>{user.email}</a>
                     ))}
                     <a className="mdl-navigation__link" key="logout" href="/logout">Logout</a>
                 </nav>
