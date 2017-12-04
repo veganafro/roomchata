@@ -35,15 +35,6 @@ class Roomchata {
 
 window.onload = function() {
     console.log('$$$ RUNNING IN MAIN');
-    const request = new XMLHttpRequest();
-    request.open('GET', '/room');
-    request.addEventListener('load', function() {
-        console.log('$$$ GOT A RESPONSE FROM ROOMS', request.responseText);
-    });
-    request.addEventListener('error', function(error) {
-        console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);
-    });
-    request.send();
 
     const search = document.querySelector('form[name=search]');
     search.addEventListener('submit', handleSearchSubmitted);
@@ -52,4 +43,27 @@ window.onload = function() {
 function handleSearchSubmitted(evt) {
     evt.preventDefault();
     console.log('$$$ SEARCH WAS SUBMITTED');
+
+    const search_query = document.querySelector('input[name=search]');
+
+    if (isEmpty(search_query.value)) {
+        console.log('$$$ user tried to submit empty search');
+    } else {
+        const request = new XMLHttpRequest();
+        request.open('POST', '/room', true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        request.addEventListener('load', function() {
+            console.log('$$$ GOT A RESPONSE FROM ROOMS');
+        });
+        request.addEventListener('error', function(error) {
+            console.log('$$$ FOUND AN ERROR IN THE REQUEST', error);
+        });
+
+        request.send(`search_query=${search_query.value}`);
+    }
+}
+
+function isEmpty(value) {
+    return value === undefined || value === '';
 }

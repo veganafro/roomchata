@@ -167,10 +167,11 @@ app.get('/home', checkAuth, function(request, response) {
     }
 });
 
-app.get('/room', checkAuth, function(request, response) {
+app.post('/room', checkAuth, function(request, response) {
     console.log('$$$ INCOMING REQUEST', request.isAuthenticated());
     if (request.session.passport) {
         console.log('$$$ REQUEST COMING FROM', request.session.passport.user);
+        console.log('$$$ REQUEST BODY CONTAINS', request.body);
     } else {
         console.log('$$$ REQUEST IS UNAUTHENTICATED');
     }
