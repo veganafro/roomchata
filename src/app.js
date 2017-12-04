@@ -144,7 +144,7 @@ app.get('/', function(request, response) {
     response.render('login');
 });
 
-app.get('/search', function(request, response) {
+app.get('/home', function(request, response) {
     response.render('home');
 });
 
@@ -160,15 +160,15 @@ app.get('/logout', function(request, response) {
 });
 
 app.post('/signin', passport.authenticate('local-signin'), function(request, response) {
-    response.redirect('/search');
+    response.redirect('/home');
 });
 
 app.post('/signup', passport.authenticate('local-signup'), function(request, response) {
-    response.redirect('/search');
+    response.redirect('/home');
 });
 
-app.post('/search', function(request, response) {
-    response.redirect('/search');
+app.post('/home', function(request, response) {
+    response.redirect('/home');
 });
 
 app.listen(process.env.PORT || 3000, function() {
