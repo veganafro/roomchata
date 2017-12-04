@@ -33,10 +33,10 @@ class Roomchata {
     }
 }
 
+const socket = io();
+
 window.onload = function() {
     console.log('$$$ RUNNING IN MAIN');
-
-    const socket = io();
 
     const search = document.querySelector('form[name=search]');
     search.addEventListener('submit', handleSearchSubmitted);
