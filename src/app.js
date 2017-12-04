@@ -46,13 +46,13 @@ app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
     console.log('$$$ args at serializeUser', arguments);
-    done(null, user.id);
+    done(null, {id: user.id, conversations: user.conversations});
 });
 
-passport.deserializeUser(function(user_id, done) {
+passport.deserializeUser(function(user, done) {
     console.log('$$$ args at deserializeUser', arguments);
 
-    admin.database().ref('/users').child(user_id).once('value')
+    admin.database().ref('/users').child(user.id).once('value')
         .then(function(snapshot) {
             console.log('$$$ successfully deserialized a user', snapshot.val());
             done(null, snapshot.val());
@@ -130,9 +130,13 @@ passport.use('local-signin', new LocalStrategy({
     }
 ));
 
-app.use(function (request, response, next) {
-    next();
-});
+function checkAuth(request, response, next) {
+    if (request.isAuthenticated()) {
+        next();
+    } else {
+        response.redirect('/logout');
+    }
+};
 
 
 app.use('/scripts', express.static(path.join(__dirname, 'scripts')));
@@ -145,7 +149,21 @@ app.get('/', function(request, response) {
 });
 
 app.get('/home', function(request, response) {
-    response.render('home');
+    if (request.session.passport) {
+        const users_to_lookup = Object.keys(request.session.passport.user.conversations);
+
+        const promises = users_to_lookup.map(function(user_id) {
+            return admin.database().ref('/users').child(user_id).once('value');
+        });
+        Promise.all(promises).then(function(snapshots) {
+            const user_display_names = snapshots.map(function(snapshot) {
+                return {email: snapshot.val().email};
+            });
+            response.render('home', {conversation_counterparts: user_display_names});
+        });
+    } else {
+        response.redirect('/');
+    }
 });
 
 app.get('/room', function(request, response) {
