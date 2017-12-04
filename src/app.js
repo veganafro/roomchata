@@ -131,7 +131,6 @@ passport.use('local-signin', new LocalStrategy({
 ));
 
 app.use(function (request, response, next) {
-    console.log('$$$ request auth status', request.isAuthenticated());
     next();
 });
 
@@ -146,7 +145,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/search', function(request, response) {
-    response.render('search');
+    response.render('home');
 });
 
 app.get('/room', function(request, response) {
