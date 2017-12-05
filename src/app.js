@@ -1,12 +1,13 @@
 const md5 = require('md5');
 const path = require('path');
+const uuid = require('uuid');
 const express = require('express');
 const passport = require('passport');
-const uuid = require('node-time-uuid');
 const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
 const session = require('express-session');
 const body_parser = require('body-parser');
+const node_uuid = require('node-time-uuid');
 const cookie_parser = require('cookie-parser');
 const react_views = require('express-react-views');
 const memorystore = require('memorystore')(session);
@@ -209,7 +210,7 @@ io.on('connection', function(socket) {
 
     socket.on('write_message', function(message_text) {
         const current_user = socket.request.session.passport.user;
-        const message_id = new uuid().toString('pretty');
+        const message_id = new node_uuid().toString('pretty');
         const sender = current_user.email;
 
         const new_message = {
