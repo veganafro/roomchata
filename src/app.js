@@ -136,6 +136,7 @@ passport.use('local-signin', new LocalStrategy({
     }
 ));
 
+
 io.use(function(socket, next) {
     session_middleware(socket.request, {}, next);
 });
@@ -146,6 +147,7 @@ io.on('connection', function(socket) {
         io.sockets.connected[socket.id].emit('show_conversation', data);
     });
 });
+
 
 function checkAuth(request, response, next) {
     if (request.isAuthenticated()) {
