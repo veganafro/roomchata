@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3000');
+const socket = io(`http://localhost:${process.env.PORT}`);
 require("firebase/database");
 const firebase = require('firebase/app').initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
