@@ -14,7 +14,7 @@ class Chat extends React.Component {
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input className="mdl-textfield__input" type="text" id="message" name="new_message_text"></input>
                             </div>
-                            <button id="submit" type="submit" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button id="send" type="submit" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 send
                             </button>
                         </form>

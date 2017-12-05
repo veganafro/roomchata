@@ -179,9 +179,17 @@ io.on('connection', function(socket) {
 
 function checkAuth(request, response, next) {
     if (request.isAuthenticated()) {
-        next();
+        if (request.route.path === '/') {
+            response.redirect('/home');
+        } else {
+            next();
+        }
     } else {
-        response.redirect('/logout');
+        if (request.route.path === '/') {
+            next();
+        } else {
+            response.redirect('/logout');
+        }
     }
 };
 
@@ -191,7 +199,7 @@ app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 
 app.engine('jsx', react_views.createEngine());
 
-app.get('/', function(request, response) {
+app.get('/', checkAuth, function(request, response) {
     response.render('login');
 });
 

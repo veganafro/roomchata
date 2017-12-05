@@ -45,6 +45,9 @@ window.onload = function() {
     current_connections.forEach(function(connection) {
         connection.addEventListener('click', handleConnectionChosen);
     });
+
+    const send_message = document.querySelector('button[id*=send]');
+    
 };
 
 function handleConnectionChosen(evt) {
