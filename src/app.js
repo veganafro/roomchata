@@ -152,20 +152,25 @@ io.on('connection', function(socket) {
             .then(function(snapshot) {
                 if (!snapshot.val()) {
                     console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
-                    io.sockets.connected[socket.id].emit('show_conversation', 'No messaging history found.');
+                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'No messaging history found.'});
                     return;
                 }
 
                 console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
-                io.sockets.connected[socket.id].emit('show_conversation', 'Have fun chatting.');
+                io.sockets.connected[socket.id].emit('show_conversation',
+                    {
+                        message: 'Have fun chatting.',
+                        history: snapshot.val()
+                    }
+                );
                 return;
             }, function(rejection_reason) {
                 console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
-                io.sockets.connected[socket.id].emit('show_conversation', 'Something went wrong when looking up message history.');
+                io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong when looking up message history.'});
                 return;
             }).catch(function(error) {
                 console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN LOOKING FOR MESSAGES', error);
-                io.sockets.connected[socket.id].emit('show_conversation', 'Something went wrong in the database.');
+                io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
                 return;
             });
     });

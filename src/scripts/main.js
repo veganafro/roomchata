@@ -54,7 +54,17 @@ function handleConnectionChosen(evt) {
 }
 
 socket.on('show_conversation', function(data) {
-    alert(data);
+    const message_list = document.querySelector('div[id*=messages]');
+    clearElement(message_list);
+    message_list.appendChild(makeNodeWithType('span'));
+    if (data.hasOwnProperty('history')) {
+        alert(data.message);
+        Object.keys(data.history).map(function(message_id) {
+            message_list.appendChild(makeNodeWithType('div', data.history[message_id].text));
+        });
+    } else {
+        alert(data.message);
+    }
 });
 
 function handleSearchSubmitted(evt) {
@@ -109,6 +119,12 @@ function makeNodeWithType(type) {
         node.appendChild(child);
     }
     return node;
+}
+
+function clearElement(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
 }
 
 function isEmpty(value) {
