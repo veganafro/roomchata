@@ -1,5 +1,6 @@
 const md5 = require('md5');
 const path = require('path');
+const uuid = require('uuid/v1');
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt-nodejs');
@@ -142,9 +143,31 @@ io.use(function(socket, next) {
 });
 
 io.on('connection', function(socket) {
-    socket.on('open_conversation', function(data) {
-        socket.request.session.passport.user.open_conversation = data;
-        io.sockets.connected[socket.id].emit('show_conversation', data);
+    socket.on('open_conversation', function(counterpart_email) {
+        const current_user = socket.request.session.passport.user;
+        current_user.open_conversation = counterpart_email;
+
+        admin.database().ref('/conversations').child(current_user.conversations[md5(counterpart_email)])
+            .orderByKey().limitToLast(10).once('value')
+            .then(function(snapshot) {
+                if (!snapshot.val()) {
+                    console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
+                    io.sockets.connected[socket.id].emit('show_conversation', 'No messaging history found.');
+                    return;
+                }
+
+                console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
+                io.sockets.connected[socket.id].emit('show_conversation', 'Have fun chatting.');
+                return;
+            }, function(rejection_reason) {
+                console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
+                io.sockets.connected[socket.id].emit('show_conversation', 'Something went wrong when looking up message history.');
+                return;
+            }).catch(function(error) {
+                console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN LOOKING FOR MESSAGES', error);
+                io.sockets.connected[socket.id].emit('show_conversation', 'Something went wrong in the database.');
+                return;
+            });
     });
 });
 
@@ -216,11 +239,12 @@ app.post('/connect', checkAuth, function(request, response) {
             }
 
             const users_to_connect = [counterpart.id, current_user.id];
+            const conversation_id = uuid();
 
             const promises = users_to_connect.map(function(user_id, index) {
                 return admin.database().ref('/users').child(user_id).child('conversations')
                     .child(users_to_connect[(users_to_connect.length - 1) - index])
-                    .set(true);
+                    .set(conversation_id);
             });
 
             Promise.all(promises).then(function(snapshots) {

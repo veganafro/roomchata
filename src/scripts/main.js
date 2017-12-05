@@ -81,6 +81,7 @@ function handleSearchSubmitted(evt) {
 
 function successfullyConnectUsers(request) {
     const response = JSON.parse(request.response);
+    console.log('$$$ HERE IS THE RESPONSE AFTER CONNECTING USERS', response);
     if (response.hasOwnProperty('error')) {
         alert(response.error);
     } else {
@@ -89,7 +90,7 @@ function successfullyConnectUsers(request) {
 
         added_connection.setAttribute('href', "");
         added_connection.classList.add('mdl-navigation__link');
-        added_connection.addEventListener(handleConnectionChosen);
+        added_connection.addEventListener('click', handleConnectionChosen);
         connections_list.insertBefore(added_connection, connections_list.firstChild);
 
         alert(response.success);
