@@ -60,8 +60,14 @@ socket.on('show_conversation', function(data) {
     if (data.hasOwnProperty('history')) {
         alert(data.message);
         Object.keys(data.history).map(function(message_id) {
-            message_list.appendChild(makeNodeWithType('div', data.history[message_id].text));
+            const message = makeMessageElement(
+                data.history[message_id].text,
+                data.history[message_id].sender
+            );
+            message_list.appendChild(message);
+            setTimeout(function() {message.classList.add('visible')}, 1);
         });
+        message_list.scrollTop = message_list.scrollHeight;
     } else {
         alert(data.message);
     }
@@ -106,6 +112,21 @@ function successfullyConnectUsers(request) {
         alert(response.success);
     }
     document.querySelector('input[name=search]').value = "";
+}
+
+function makeMessageElement(message, sender) {
+    const message_container = makeNodeWithType('div');
+    const content = makeNodeWithType('div', message);
+    const user = makeNodeWithType('div', sender);
+
+    message_container.classList.add('message-container');
+    content.classList.add('message');
+    user.classList.add('sender');
+
+    message_container.appendChild(content);
+    message_container.appendChild(user);
+
+    return message_container;
 }
 
 function makeNodeWithType(type) {
