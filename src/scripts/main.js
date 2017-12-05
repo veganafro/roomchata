@@ -37,8 +37,6 @@ const socket = io();
 let active_conversation;
 
 window.onload = function() {
-    console.log('$$$ RUNNING IN MAIN');
-
     const search = document.querySelector('form[name*=search]');
     search.addEventListener('submit', handleSearchSubmitted);
 
@@ -54,7 +52,7 @@ window.onload = function() {
 function handleSendMessage(evt) {
     evt.preventDefault();
     const message_text = document.querySelector('input[name*=message]');
-    if (isEmpty(message_text.value) || isEmpty(active_conversation)) {
+    if (isEmpty(message_text.value)) {
         alert('Write a message to send or pick a conversation.');
     } else {
         socket.emit('write_message', message_text.value, active_conversation);
@@ -98,7 +96,6 @@ socket.on('show_conversation', function(data) {
 
 function handleSearchSubmitted(evt) {
     evt.preventDefault();
-    console.log('$$$ SEARCH WAS SUBMITTED');
 
     const search_query = document.querySelector('input[name*=search]');
 
@@ -134,7 +131,7 @@ function successfullyConnectUsers(request) {
 
         alert(response.success);
         // hacky non-sense to update the user stored in the session
-        socket.emit('open_conversation', added_connection);
+        socket.emit('open_conversation', response.connection);
     }
     document.querySelector('input[name=search]').value = "";
 }

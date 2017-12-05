@@ -148,8 +148,6 @@ io.on('connection', function(socket) {
         const current_user = socket.request.session.passport.user;
         current_user.open_conversation = counterpart_email;
 
-        console.log('$$$ CURRENT USER HAS', current_user);
-
         if (!current_user.hasOwnProperty('conversations') || !current_user.conversations[md5(counterpart_email)]) {
             admin.database().ref('/users').child(current_user.id).once('value')
                 .then(function(snapshot) {
@@ -159,6 +157,7 @@ io.on('connection', function(socket) {
                     }
 
                     current_user.conversations = snapshot.val().conversations;
+                    console.log('$$$ CURRENT USER HAS', current_user);
                     io.sockets.connected[socket.id].emit('show_conversation',
                         {
                             active_conversation: counterpart_email,
@@ -178,15 +177,22 @@ io.on('connection', function(socket) {
                 .then(function(snapshot) {
                     if (!snapshot.val()) {
                         console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
-                        io.sockets.connected[socket.id].emit('show_conversation', {message: 'No messaging history found.'});
+                        io.sockets.connected[socket.id].emit('show_conversation',
+                            {
+                                active_conversation: counterpart_email,
+                                message: 'Get to talking.',
+                                history: snapshot.val()
+                            }
+                        );
                         return;
                     }
 
                     console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
+                    console.log('$$$ CURRENT USER HAS', current_user);
                     io.sockets.connected[socket.id].emit('show_conversation',
                         {
                             active_conversation: counterpart_email,
-                            message: 'Have fun chatting.',
+                            message: 'Keep it going.',
                             history: snapshot.val()
                         }
                     );
@@ -204,9 +210,25 @@ io.on('connection', function(socket) {
     });
 
 
-    socket.on('write_message', function(message, counterpart) {
+    socket.on('write_message', function(message_text) {
         const current_user = socket.request.session.passport.user;
+        const message_id = uniqid(uuid());
         const sender = current_user.email;
+
+        const new_message = {
+            text: message_text,
+            sender: sender
+        }
+
+        admin.database().ref('/conversations').child(current_user.conversations[md5(current_user.open_conversation)]).child(message_id)
+            .set(new_message)
+            .then(function(data) {
+                console.log('$$$ SUCCESSFULLY WROTE NEW MESSAGE', data);
+                return;
+            }).catch(function(error) {
+                console.log('$$$ SOMETHING WENT WRONG WHEN WRITING THE MESSAGE', error);
+                return;
+            });
     });
 });
 
