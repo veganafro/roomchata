@@ -263,7 +263,7 @@ app.get('/home', checkAuth, function(request, response) {
         .then(function(active_chats) {
             if (!active_chats.val()) {
                 console.log('$$$ USER DID NOT HAVE ANY ACTIVE CHATS');
-                response.render('home', {conversation_counterparts: []});
+                response.render('home', {email: current_user.email, conversation_counterparts: []});
                 return;
             }
 
