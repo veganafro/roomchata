@@ -146,32 +146,38 @@ io.use(function(socket, next) {
 io.on('connection', function(socket) {
     socket.on('open_conversation', function(counterpart_email) {
         const current_user = socket.request.session.passport.user;
+        const previous_conversation = current_user.open_conversation;
         current_user.open_conversation = counterpart_email;
 
+        // update the client side with server side set cookies
         if (!current_user.hasOwnProperty('conversations') || !current_user.conversations[md5(counterpart_email)]) {
             admin.database().ref('/users').child(current_user.id).once('value')
                 .then(function(snapshot) {
                     if (!snapshot.val()) {
                         console.log('$$$ COULD NOT FIND USER IN DATABASE WHEN UPDATING', snapshot);
-                        return;
+                    } else {
+                        current_user.conversations = snapshot.val().conversations;
+                        console.log('$$$ CURRENT USER HAS', current_user);
+                        io.sockets.connected[socket.id].emit('show_conversation',
+                            {
+                                active_conversation: counterpart_email,
+                                message: 'Have fun chatting.',
+                                history: snapshot.val()
+                            }
+                        );
                     }
-
-                    current_user.conversations = snapshot.val().conversations;
-                    console.log('$$$ CURRENT USER HAS', current_user);
-                    io.sockets.connected[socket.id].emit('show_conversation',
-                        {
-                            active_conversation: counterpart_email,
-                            message: 'Have fun chatting.',
-                            history: snapshot.val()
-                        }
-                    );
-                    return;
                 }).catch(function(error) {
                     console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN UPDATING CONVERSATIONS', error);
-                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
                     return;
                 });
         } else {
+            // stop listening for new messages at the previous conversation
+            if (previous_conversation !== undefined && previous_conversation !== null && previous_conversation !== "") {
+                console.log('$$$ STOP LISTENING TO OLD THINGS');
+                admin.database().ref('/conversations').child(current_user.conversations[md5(previous_conversation)]).off();
+            }
+
+            // get all the messages at this location and send them back to the client
             admin.database().ref('/conversations').child(current_user.conversations[md5(counterpart_email)])
                 .orderByKey().limitToLast(10).once('value')
                 .then(function(snapshot) {
@@ -181,38 +187,43 @@ io.on('connection', function(socket) {
                             {
                                 active_conversation: counterpart_email,
                                 message: 'Get to talking.',
+                                history: {}
+                            }
+                        );
+                    } else {
+                        console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
+                        console.log('$$$ CURRENT USER HAS', current_user);
+                        io.sockets.connected[socket.id].emit('show_conversation',
+                            {
+                                active_conversation: counterpart_email,
+                                message: 'Keep it going.',
                                 history: snapshot.val()
                             }
                         );
-                        return;
                     }
-
-                    console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
-                    console.log('$$$ CURRENT USER HAS', current_user);
-                    io.sockets.connected[socket.id].emit('show_conversation',
-                        {
-                            active_conversation: counterpart_email,
-                            message: 'Keep it going.',
-                            history: snapshot.val()
-                        }
-                    );
-                    return;
                 }, function(rejection_reason) {
                     console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
-                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong when looking up message history.'});
                     return;
                 }).catch(function(error) {
                     console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN LOOKING FOR MESSAGES', error);
-                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
                     return;
                 });
         }
     });
 
+    socket.on('listen_for_messages', function(active_conversation) {
+        console.log('$$$ LISTENING FOR MESSAGES');
+        const current_user = socket.request.session.passport.user;
+        admin.database().ref('/conversations').child(current_user.conversations[md5(active_conversation)])
+            .orderByKey().limitToLast(1).on('child_added', function(snapshot) {
+                console.log('$$$ HEARD A NEW MESSAGE WRITTEN', snapshot.val());
+            });
+    });
+
 
     socket.on('write_message', function(message_text) {
         const current_user = socket.request.session.passport.user;
-        const message_id = uniqid(uuid());
+        const message_id = uniqid(`${process.hrtime()[1]}`);
         const sender = current_user.email;
 
         const new_message = {
@@ -222,9 +233,8 @@ io.on('connection', function(socket) {
 
         admin.database().ref('/conversations').child(current_user.conversations[md5(current_user.open_conversation)]).child(message_id)
             .set(new_message)
-            .then(function(data) {
-                console.log('$$$ SUCCESSFULLY WROTE NEW MESSAGE', data);
-                return;
+            .then(function() {
+                console.log('$$$ SUCCESSFULLY WROTE NEW MESSAGE');
             }).catch(function(error) {
                 console.log('$$$ SOMETHING WENT WRONG WHEN WRITING THE MESSAGE', error);
                 return;
