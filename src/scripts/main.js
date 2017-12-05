@@ -76,7 +76,7 @@ function handleConnectionChosen(evt) {
 
 socket.on('show_conversation', function(data) {
     const message_list = document.querySelector('div[id*=messages]');
-    clearElement(message_list);
+    clearMessages(message_list);
     message_list.appendChild(makeNodeWithType('span'));
     if (data.hasOwnProperty('history')) {
         alert(data.message);
@@ -165,8 +165,9 @@ function makeNodeWithType(type) {
     return node;
 }
 
-function clearElement(element) {
+function clearMessages(element) {
     while (element.firstChild) {
+        setTimeout(function() {element.firstChild.classList.remove('visible')}, 1);
         element.removeChild(element.firstChild);
     }
 }
