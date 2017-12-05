@@ -5,6 +5,7 @@ class Header extends React.Component {
         return (
             <header className="mdl-layout__header">
                 <div className="mdl-layout__header-row">
+                    <span className="mdl-layout-title" name="email">{this.props.email}</span>
                     <div className="mdl-layout-spacer"></div>
                     <form name="search">
                         <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-left">

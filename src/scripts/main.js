@@ -38,7 +38,7 @@ const socket = io();
 window.onload = function() {
     console.log('$$$ RUNNING IN MAIN');
 
-    const search = document.querySelector('form[name=search]');
+    const search = document.querySelector('form[name*=search]');
     search.addEventListener('submit', handleSearchSubmitted);
 
     const current_connections = document.querySelectorAll('a[class*=conversations]');
@@ -47,8 +47,26 @@ window.onload = function() {
     });
 
     const send_message = document.querySelector('button[id*=send]');
-    
+    send_message.addEventListener('click', handleSendMessage);
 };
+
+function handleSendMessage(evt) {
+    evt.preventDefault();
+    const message_text = document.querySelector('input[name*=message]');
+    if (isEmpty(message_text.value)) {
+        alert('Write a message to send first.');
+    } else {
+        socket.emit('write_message', message_text.value);
+        const message_list = document.querySelector('div[id*=messages]');
+        const message_sender = document.querySelector('span[name*=email]');
+        const message = makeMessageElement(message_text.value, message_sender.textContent);
+
+        message_list.appendChild(message);
+        setTimeout(function() {message.classList.add('visible')}, 1);
+        message_list.scrollTop = message_list.scrollHeight;
+        message_text.value = "";
+    }
+}
 
 function handleConnectionChosen(evt) {
     evt.preventDefault();
@@ -80,7 +98,7 @@ function handleSearchSubmitted(evt) {
     evt.preventDefault();
     console.log('$$$ SEARCH WAS SUBMITTED');
 
-    const search_query = document.querySelector('input[name=search]');
+    const search_query = document.querySelector('input[name*=search]');
 
     if (isEmpty(search_query.value)) {
         console.log('$$$ user tried to submit empty search');

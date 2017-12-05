@@ -52,7 +52,7 @@ app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
     console.log('$$$ args at serializeUser', arguments);
-    done(null, {id: user.id, conversations: user.conversations});
+    done(null, {email: user.email, id: user.id, conversations: user.conversations});
 });
 
 passport.deserializeUser(function(user, done) {
@@ -223,7 +223,7 @@ app.get('/home', checkAuth, function(request, response) {
                 const user_display_names = snapshots.map(function(snapshot) {
                     return {email: snapshot.val().email};
                 });
-                response.render('home', {conversation_counterparts: user_display_names});
+                response.render('home', {email: current_user.email, conversation_counterparts: user_display_names});
             });
         }).catch(function(error) {
             console.log('$$$ SOMETHING WENT WRONG WHEN LOOKING IN THE DATABASE', error);
@@ -245,7 +245,7 @@ app.post('/connect', checkAuth, function(request, response) {
 
             const counterpart = snapshot.val();
             // you're already chatting with this person, don't update the database
-            if (counterpart.conversations.hasOwnProperty(current_user.id)) {
+            if (counterpart.hasOwnProperty('conversations') && counterpart.conversations.hasOwnProperty(current_user.id)) {
                 console.log('$$$ YOU CANNOT RECREATE CHATS');
                 response.send({error: 'You cannot recreate existing chats'});
                 return;

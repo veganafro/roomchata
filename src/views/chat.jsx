@@ -12,9 +12,9 @@ class Chat extends React.Component {
                         id="enter_message_form">
                         <form id="message-form">
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input className="mdl-textfield__input" type="text" id="message" name="new_message_text"></input>
+                                <input className="mdl-textfield__input" type="text" id="message" name="message"></input>
                             </div>
-                            <button id="send" type="submit" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button id="send" name="send" type="submit" className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 send
                             </button>
                         </form>
