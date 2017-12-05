@@ -34,6 +34,7 @@ class Roomchata {
 }
 
 const socket = io();
+let active_conversation;
 
 window.onload = function() {
     console.log('$$$ RUNNING IN MAIN');
@@ -53,10 +54,10 @@ window.onload = function() {
 function handleSendMessage(evt) {
     evt.preventDefault();
     const message_text = document.querySelector('input[name*=message]');
-    if (isEmpty(message_text.value)) {
-        alert('Write a message to send first.');
+    if (isEmpty(message_text.value) || isEmpty(active_conversation)) {
+        alert('Write a message to send or pick a conversation.');
     } else {
-        socket.emit('write_message', message_text.value);
+        socket.emit('write_message', message_text.value, active_conversation);
         const message_list = document.querySelector('div[id*=messages]');
         const message_sender = document.querySelector('span[name*=email]');
         const message = makeMessageElement(message_text.value, message_sender.textContent);
@@ -89,6 +90,7 @@ socket.on('show_conversation', function(data) {
             setTimeout(function() {message.classList.add('visible')}, 1);
         });
         message_list.scrollTop = message_list.scrollHeight;
+        active_conversation = data.active_conversation;
     } else {
         alert(data.message);
     }
@@ -173,5 +175,5 @@ function clearMessages(element) {
 }
 
 function isEmpty(value) {
-    return value === undefined || value === '';
+    return value === undefined || value === '' || value === null;
 }
