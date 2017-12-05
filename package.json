@@ -28,7 +28,6 @@
     "express": "^4.16.2",
     "express-react-views": "^0.10.4",
     "express-session": "^1.15.6",
-    "firebase": "^4.6.2",
     "firebase-admin": "^5.5.1",
     "jsx": "^0.9.89",
     "md5": "^2.2.1",
