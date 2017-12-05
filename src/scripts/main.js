@@ -131,6 +131,8 @@ function successfullyConnectUsers(request) {
         connections_list.insertBefore(added_connection, connections_list.firstChild);
 
         alert(response.success);
+        // hacky non-sense to update the user stored in the session
+        socket.emit('open_conversation', added_connection);
     }
     document.querySelector('input[name=search]').value = "";
 }

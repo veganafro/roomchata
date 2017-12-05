@@ -147,32 +147,53 @@ io.on('connection', function(socket) {
         const current_user = socket.request.session.passport.user;
         current_user.open_conversation = counterpart_email;
 
-        admin.database().ref('/conversations').child(current_user.conversations[md5(counterpart_email)])
-            .orderByKey().limitToLast(10).once('value')
-            .then(function(snapshot) {
-                if (!snapshot.val()) {
-                    console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
-                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'No messaging history found.'});
-                    return;
-                }
+        console.log('$$$ CURRENT USER HAS', current_user);
 
-                console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
-                io.sockets.connected[socket.id].emit('show_conversation',
-                    {
-                        message: 'Have fun chatting.',
-                        history: snapshot.val()
+        if (!current_user.hasOwnProperty('conversations') || !current_user.conversations[md5(counterpart_email)]) {
+            admin.database().ref('/users').child(current_user.id).once('value')
+                .then(function(snapshot) {
+                    if (!snapshot.val()) {
+                        console.log('$$$ COULD NOT FIND USER IN DATABASE WHEN UPDATING', snapshot);
+                        return;
                     }
-                );
-                return;
-            }, function(rejection_reason) {
-                console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
-                io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong when looking up message history.'});
-                return;
-            }).catch(function(error) {
-                console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN LOOKING FOR MESSAGES', error);
-                io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
-                return;
-            });
+
+                    console.log('$$$ UPDATING CURRENT USERS CONVERSATIONS TO INCLUDE', snapshot.val().conversations);
+                    current_user.conversations = snapshot.val().conversations;
+                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Chat it up.'});
+                    return;
+                }).catch(function(error) {
+                    console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN UPDATING CONVERSATIONS', error);
+                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
+                    return;
+                });
+        } else {
+            admin.database().ref('/conversations').child(current_user.conversations[md5(counterpart_email)])
+                .orderByKey().limitToLast(10).once('value')
+                .then(function(snapshot) {
+                    if (!snapshot.val()) {
+                        console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
+                        io.sockets.connected[socket.id].emit('show_conversation', {message: 'No messaging history found.'});
+                        return;
+                    }
+
+                    console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
+                    io.sockets.connected[socket.id].emit('show_conversation',
+                        {
+                            message: 'Have fun chatting.',
+                            history: snapshot.val()
+                        }
+                    );
+                    return;
+                }, function(rejection_reason) {
+                    console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
+                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong when looking up message history.'});
+                    return;
+                }).catch(function(error) {
+                    console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN LOOKING FOR MESSAGES', error);
+                    io.sockets.connected[socket.id].emit('show_conversation', {message: 'Something went wrong in the database.'});
+                    return;
+                });
+        }
     });
 });
 
