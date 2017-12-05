@@ -1,39 +1,26 @@
-class Roomchata {
+const socket = io('http://localhost:3000');
+require("firebase/database");
+const firebase = require('firebase/app').initializeApp({
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+});
 
-    loadMessages() {
-        this.messages_reference = this.database.ref('messages');
-        this.messages_reference.off();
+const database = firebase.database();
 
-        const set_message = function(data) {
-            const value = data.val();
-            this.displayMessage(data.key, value.name, value.text, value.photoUrl, value.imageUrl);
-        }.bind(this);
+socket.on('connect', function() {
+    console.log('$$$ SOCKET CONNECTED ON THE CLIENT SIDE');
 
-        this.messages_reference.limitToLast(10).on('child_added', set_message);
-        this.messages_reference.limitToLast(10).on('child_changed', set_message);
-    }
-
-    saveTextMessage(evt) {
-        evt.preventDefault();
-
-        if (this.message_input.value && this.checkSignedInWithMessage()) {
-            const current_user = this.auth.currentUser;
-
-            this.messages_reference.push({
-                name: current_user.displayName,
-                text: this.message_input.value,
-                photoUrl: current_user.photoURL,
-            }).then(function() {
-                this.message_input.value = '';
-                this.toggleButton();
-            }.bind(this)).catch(function(error) {
-                console.log('$$$ could not add message to the database', error);
+    socket.on('listen_for_messages', function(conversation) {
+        console.log('$$$ LISTENING ON THE CLIENT SIDE NOW', conversation);
+        database.ref('/conversations').child(conversation)
+            .orderByKey().limitToLast(1).on('child_added', function(snapshot) {
+                console.log('$$$ HEARD A NEW MESSAGE WRITTEN', snapshot.val());
             });
-        }
-    }
-}
+    });
+});
 
-const socket = io();
 let active_conversation;
 
 window.onload = function() {
@@ -56,7 +43,6 @@ function handleSendMessage(evt) {
         alert('Write a message to send or pick a conversation.');
     } else {
         socket.emit('write_message', message_text.value, active_conversation);
-        socket.emit('listen_for_messages', active_conversation);
         const message_list = document.querySelector('div[id*=messages]');
         const message_sender = document.querySelector('span[name*=email]');
         const message = makeMessageElement(message_text.value, message_sender.textContent);
@@ -93,7 +79,6 @@ socket.on('show_conversation', function(data) {
         console.log('$$$ SOMETHING WENT WRONG GETTING MESSAGE HISTORY');
     }
     active_conversation = data.active_conversation;
-    socket.emit('listen_for_messages', active_conversation);
 });
 
 function handleSearchSubmitted(evt) {
@@ -123,6 +108,9 @@ function successfullyConnectUsers(request) {
     if (response.hasOwnProperty('error')) {
         alert(response.error);
     } else {
+        // hacky non-sense to update the user stored in the session
+        socket.emit('open_conversation', response.connection);
+
         const connections_list = document.querySelector('.mdl-navigation');
         const added_connection = makeNodeWithType('a', response.connection);
 
@@ -132,8 +120,6 @@ function successfullyConnectUsers(request) {
         connections_list.insertBefore(added_connection, connections_list.firstChild);
 
         alert(response.success);
-        // hacky non-sense to update the user stored in the session
-        socket.emit('open_conversation', response.connection);
     }
     document.querySelector('input[name=search]').value = "";
 }

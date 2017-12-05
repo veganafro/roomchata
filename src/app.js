@@ -1,9 +1,8 @@
 const md5 = require('md5');
 const path = require('path');
-const uuid = require('uuid/v1');
-const uniqid = require('uniqid');
 const express = require('express');
 const passport = require('passport');
+const uuid = require('node-time-uuid');
 const bcrypt = require('bcrypt-nodejs');
 const admin = require('firebase-admin');
 const session = require('express-session');
@@ -151,6 +150,7 @@ io.on('connection', function(socket) {
 
         // update the client side with server side set cookies
         if (!current_user.hasOwnProperty('conversations') || !current_user.conversations[md5(counterpart_email)]) {
+
             admin.database().ref('/users').child(current_user.id).once('value')
                 .then(function(snapshot) {
                     if (!snapshot.val()) {
@@ -171,12 +171,6 @@ io.on('connection', function(socket) {
                     return;
                 });
         } else {
-            // stop listening for new messages at the previous conversation
-            if (previous_conversation !== undefined && previous_conversation !== null && previous_conversation !== "") {
-                console.log('$$$ STOP LISTENING TO OLD THINGS');
-                admin.database().ref('/conversations').child(current_user.conversations[md5(previous_conversation)]).off();
-            }
-
             // get all the messages at this location and send them back to the client
             admin.database().ref('/conversations').child(current_user.conversations[md5(counterpart_email)])
                 .orderByKey().limitToLast(10).once('value')
@@ -190,6 +184,7 @@ io.on('connection', function(socket) {
                                 history: {}
                             }
                         );
+                        socket.emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     } else {
                         console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
                         console.log('$$$ CURRENT USER HAS', current_user);
@@ -200,6 +195,7 @@ io.on('connection', function(socket) {
                                 history: snapshot.val()
                             }
                         );
+                        socket.emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     }
                 }, function(rejection_reason) {
                     console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
@@ -211,19 +207,9 @@ io.on('connection', function(socket) {
         }
     });
 
-    socket.on('listen_for_messages', function(active_conversation) {
-        console.log('$$$ LISTENING FOR MESSAGES');
-        const current_user = socket.request.session.passport.user;
-        admin.database().ref('/conversations').child(current_user.conversations[md5(active_conversation)])
-            .orderByKey().limitToLast(1).on('child_added', function(snapshot) {
-                console.log('$$$ HEARD A NEW MESSAGE WRITTEN', snapshot.val());
-            });
-    });
-
-
     socket.on('write_message', function(message_text) {
         const current_user = socket.request.session.passport.user;
-        const message_id = uniqid(`${process.hrtime()[1]}`);
+        const message_id = new uuid().toString('pretty');
         const sender = current_user.email;
 
         const new_message = {
