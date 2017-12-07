@@ -34,6 +34,7 @@ socket.on('connect', function() {
                 message_list.appendChild(message);
                 setTimeout(function() {message.classList.add('visible')}, 1);
             });
+            message_list.removeChild(message_list.lastChild);
             message_list.scrollTop = message_list.scrollHeight;
         } else {
             console.log('$$$ SOMETHING WENT WRONG GETTING MESSAGE HISTORY');
