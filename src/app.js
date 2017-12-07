@@ -145,7 +145,10 @@ io.use(function(socket, next) {
 io.on('connection', function(socket) {
     socket.on('open_conversation', function(counterpart_email) {
         const current_user = socket.request.session.passport.user;
-        const previous_conversation = current_user.open_conversation;
+        let previous_conversation = current_user.open_conversation;
+        if (isEmpty(previous_conversation)) {
+            previous_conversation = "";
+        }
         current_user.open_conversation = counterpart_email;
 
         // update the client side with server side set cookies
@@ -359,3 +362,7 @@ app.post('/home', function(request, response) {
 http.listen(process.env.PORT || 3000, function() {
     console.log('Listening on port', this.address().port, 'in context', app.settings.env);
 });
+
+function isEmpty(value) {
+    return value === undefined || value === '' || value === null;
+}
