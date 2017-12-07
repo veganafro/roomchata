@@ -2,34 +2,31 @@
 
 ## Overview
 
-Talking to people you know is less fun than talking to people you don't know. Use roomchata to talk
-to random people and chat about whatever the group of people wants to talk about.
-
-Roomchata allows users to log in and see the topic of a given room, enter that room, and start chatting
-with other users about that topic. Users can also create rooms if they'd like.
+Talking to people you know is more fun than talking to people you do know. Use roomchata to talk
+to people you would already be talking to on messenger. This is basically a bad messenger clone. Have fun.
 
 ## Data Model
 
-Roomchata will store users, rooms, and messages
+Roomchata will store users and messages
 
-* users can have multiple rooms (via references)
-* each room can have multiple messages (by embedding)
+* users can message multiple people (via references)
+* conversations can have multiple messages in them (by embedding)
 
 An Example User:
 ```javascript
 {
     username: // a user defined username,
     inconspicuous: // a password hash,
-    rooms: // an object of references to rooms the user belongs to
+    conversations: // an object of references to conversations the user has
 }
 ```
 
-An Example Room:
+An Example Conversation:
 ```javascript
 {
-    room: { // an object keeping track of the active rooms
-        name: // the name of the room
-        members: // an object containing usernames that are in the room
+    message_id: { // an object keeping track of the message metadata
+        sender: // the name of the sender
+        text: // the message text
     }
 }
 ```
@@ -37,20 +34,16 @@ An Example Room:
 An Example Message:
 ```javascript
 {
-    room_name: { // an object keeping track of the messages sent in a room
-        timestamp: { // an object keyed by timestamp containing the message sent at the specified time
-            sender: // the sender of the message,
-            message: // the message that was sent,
-        }
-    }
+    sender: // the name of the sender
+    text: // the message text
 }
 ```
 
-An Example Message with Embedded Items:
+An Example Conversation with Embedded Items:
 
 ```javascript
 {
-    'ait': {
+    'conversation_id': {
         '2017-11-02 10:26:47 PM EST': {
             'sender': 'ait student 69',
             'message': 'wao thz prjct z s fn'
@@ -87,22 +80,22 @@ An Example Message with Embedded Items:
 
 1. as non-registered user, I can register a new account with the site
 2. as a user, I can log in to the site
-3. as a user, I can create a new room
-4. as a user, I can go read the chat history of rooms I belong to
-5. as a user, I can send new messages to a room
+3. as a user, I can create a new conversation
+4. as a user, I can go read the chat history of conversations I belong to
+5. as a user, I can send new messages to a conversation
 
 ## Research Topics
 
 * (5 points) Integrate user authentication
     * I'm going to be using passport for user authentication
-    * an account has been made for testing; I'll email you the password
+    * make an account by signing up or log in with username `jeremy@muhia.com` and password `password69`
     * see `roomchata.herokuapp.com` for login page
-* (5 points) React.js
-    * used React.js as the frontend framework; it's a challenging library to learn, so I've assigned it 5 points
-* (5 points) Lodash.js
-    * used Lodash.js to make the server-side logic purely functional; it'll be a challenging library to learn, so I've assigned it 5 points
+* (2 points) React.js
+    * used React.js as the frontend framework; it's a challenging library to learn, so I've assigned it 2 points
+* (5 points) Firebase
+    * used Firebase as the database because it has built in database listeners
 
-15 points total out of 8 required points
+12 points total out of 8 required points
 
 ## [Link to Initial Main Project File](src/app.js)
 
@@ -110,3 +103,4 @@ An Example Message with Embedded Items:
 
 1. [passport.js authentication docs](http://passportjs.org/docs)
 2. [tutorial on React.js](https://reactjs.org/tutorial/tutorial.html)
+3. [firebase documentation](https://firebase.google.com/docs/reference/js/)
