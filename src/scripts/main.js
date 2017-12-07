@@ -115,12 +115,14 @@ function successfullyConnectUsers(request) {
 }
 
 function messageReceived(snapshot) {
-    const key = Object.keys(snapshot.val());
-    const message = makeMessageElement(snapshot.val()[key].text, snapshot.val()[key].sender);
-    const message_list = document.querySelector('div[id*=messages]');
-    message_list.appendChild(message);
-    setTimeout(function() {message.classList.add('visible')}, 1);
-    message_list.scrollTop = message_list.scrollHeight;
+    if (!isEmpty(snapshot.val())) {
+        const key = Object.keys(snapshot.val());
+        const message = makeMessageElement(snapshot.val()[key].text, snapshot.val()[key].sender);
+        const message_list = document.querySelector('div[id*=messages]');
+        message_list.appendChild(message);
+        setTimeout(function() {message.classList.add('visible')}, 1);
+        message_list.scrollTop = message_list.scrollHeight;
+    }
 }
 
 function makeMessageElement(message, sender) {

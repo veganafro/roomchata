@@ -169,8 +169,7 @@ io.on('connection', function(socket) {
                                         {
                                             active_conversation: current_user.conversations[md5(counterpart_email)],
                                             previous_conversation: current_user.conversations[md5(previous_conversation)],
-                                            message: 'Have fun chatting.',
-                                            history: {}
+                                            message: 'Have fun chatting.'
                                         }
                                     );
                                 } else {
@@ -203,8 +202,7 @@ io.on('connection', function(socket) {
                             {
                                 active_conversation: current_user.conversations[md5(counterpart_email)],
                                 previous_conversation: current_user.conversations[md5(previous_conversation)],
-                                message: 'Get to talking.',
-                                history: {}
+                                message: 'Get to talking.'
                             }
                         );
                     } else {
