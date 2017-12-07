@@ -1,6 +1,5 @@
 const socket = io();
 let active_conversation;
-const md5 = require('md5');
 require("firebase/database");
 const firebase = require('firebase/app').initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
