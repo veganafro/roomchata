@@ -185,7 +185,7 @@ io.on('connection', function(socket) {
                                 history: {}
                             }
                         );
-                        socket.emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
+                        io.sockets.connected[socket.id].emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     } else {
                         console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
                         console.log('$$$ CURRENT USER HAS', current_user);
@@ -196,7 +196,7 @@ io.on('connection', function(socket) {
                                 history: snapshot.val()
                             }
                         );
-                        socket.emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
+                        io.sockets.connected[socket.id].emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     }
                 }, function(rejection_reason) {
                     console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
