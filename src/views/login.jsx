@@ -15,11 +15,11 @@ class Login extends React.Component {
                         <div className="mdl-card__supporting-text">
                             <form method="POST" id='loginform'>
                                 <div className="mdl-textfield mdl-js-textfield">
-                                    <input className="mdl-textfield__input" type="text" name="username"></input>
+                                    <input className="mdl-textfield__input" type="text" name="username" required></input>
                                     <label className="mdl-textfield__label" htmlFor="username">Username</label>
                                 </div>
                                 <div className="mdl-textfield mdl-js-textfield">
-                                    <input className="mdl-textfield__input" type="password" name="userpass"></input>
+                                    <input className="mdl-textfield__input" type="password" name="userpass" required></input>
                                     <label className="mdl-textfield__label" htmlFor="userpass">Password</label>
                                 </div>
                             </form>
