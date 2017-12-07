@@ -52,19 +52,17 @@ app.use(passport.session());
 
 
 passport.serializeUser(function(user, done) {
-    console.log('$$$ args at serializeUser', arguments);
     done(null, {email: user.email, id: user.id, conversations: user.conversations});
 });
 
 passport.deserializeUser(function(user, done) {
-    console.log('$$$ args at deserializeUser', arguments);
-
     admin.database().ref('/users').child(user.id).once('value')
         .then(function(snapshot) {
-            console.log('$$$ successfully deserialized a user', snapshot.val());
             done(null, snapshot.val());
+        }, function(rejection_reason) {
+            console.log('$$$ could not finish deserializing user', rejection_reason);
+            done(rejection_reason, {});
         }).catch(function(error) {
-            console.log('$$$ could not deserialize user', error);
             done(error, {});
         });
 });
@@ -89,16 +87,17 @@ passport.use('local-signup', new LocalStrategy({
 
                         admin.database().ref('/users').child(md5(email)).set(new_user)
                             .then(function(data) {
-                                console.log('$$$ successfully created user', data);
                                 return done(null, new_user);
+                            }, function(rejection_reason) {
+                                console.log('$$$ user could not be created', rejection_reason);
                             }).catch(function(error) {
-                                console.log('$$$ did not create new user', error);
                                 return done(error)
                             });
                     } else {
-                        console.log('$$$ tried to create already existing user', snapshot.val());
                         return done(null, false);
                     }
+                }, function(rejection_reason) {
+                    console.log('$$$ could not sign the user up', rejection_reason);
                 }).catch(function(error) {
                     console.log('$$$ a database error occurred when creating user', error);
                     return done(error);
@@ -117,19 +116,19 @@ passport.use('local-signin', new LocalStrategy({
             admin.database().ref('/users').child(md5(email)).once('value')
                 .then(function(snapshot) {
                     if (!snapshot.val()) {
-                        console.log('$$$ could not find user with email', snapshot);
                         return done(null, false);
                     }
 
                     const user = snapshot.val();
 
                     if (bcrypt.compareSync(password, user.marinade)) {
-                        console.log('$$$ successfully logged in', user);
                         return done(null, user);
                     }
 
-                    console.log('$$$ wrong password was entered', user);
                     return done(null, false);
+                }, function(rejection_reason) {
+                    console.log('$$$ COULD NOT SIGN A USER', rejection_reason);
+                    return done(error);
                 }).catch(function(error) {
                     console.log('$$$ a database error occurred when searching for a user', error);
                     return done(error);
@@ -158,15 +157,18 @@ io.on('connection', function(socket) {
                         console.log('$$$ COULD NOT FIND USER IN DATABASE WHEN UPDATING', snapshot);
                     } else {
                         current_user.conversations = snapshot.val().conversations;
-                        console.log('$$$ CURRENT USER HAS', current_user);
                         io.sockets.connected[socket.id].emit('show_conversation',
                             {
-                                active_conversation: counterpart_email,
+                                active_conversation: current_user.conversations[md5(counterpart_email)],
+                                previous_conversation: current_user.conversations[md5(previous_conversation)],
                                 message: 'Have fun chatting.',
                                 history: snapshot.val()
                             }
                         );
                     }
+                }, function (rejection_reason) {
+                    console.log('$$$ COULD NOT FINISH OPEING THE CONVERSATION', rejection_reason);
+                    return;
                 }).catch(function(error) {
                     console.log('$$$ CAUGHT THE FOLLOWING ERROR WHEN UPDATING CONVERSATIONS', error);
                     return;
@@ -180,23 +182,21 @@ io.on('connection', function(socket) {
                         console.log('$$$ NO MESSAGES WERE FOUND FOR THE TWO USERS', snapshot.val());
                         io.sockets.connected[socket.id].emit('show_conversation',
                             {
-                                active_conversation: counterpart_email,
+                                active_conversation: current_user.conversations[md5(counterpart_email)],
+                                previous_conversation: current_user.conversations[md5(previous_conversation)],
                                 message: 'Get to talking.',
                                 history: {}
                             }
                         );
-                        io.sockets.connected[socket.id].emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     } else {
-                        console.log('$$$ FOUND THE FOLLOWING MESSAGES IN THE CONVERSATION', snapshot.val());
-                        console.log('$$$ CURRENT USER HAS', current_user);
                         io.sockets.connected[socket.id].emit('show_conversation',
                             {
-                                active_conversation: counterpart_email,
+                                active_conversation: current_user.conversations[md5(counterpart_email)],
+                                previous_conversation: current_user.conversations[md5(previous_conversation)],
                                 message: 'Keep it going.',
                                 history: snapshot.val()
                             }
                         );
-                        io.sockets.connected[socket.id].emit('listen_for_messages', current_user.conversations[md5(counterpart_email)]);
                     }
                 }, function(rejection_reason) {
                     console.log('$$$ PROMISE REJECTED COULD NOT FIND CONVERSATION', rejection_reason);
@@ -221,7 +221,9 @@ io.on('connection', function(socket) {
         admin.database().ref('/conversations').child(current_user.conversations[md5(current_user.open_conversation)]).child(message_id)
             .set(new_message)
             .then(function() {
-                console.log('$$$ SUCCESSFULLY WROTE NEW MESSAGE');
+                return;
+            }, function(rejection_reason) {
+                console.log('$$$ COULD NOT FINISH WRITING THE MESSAGE', rejection_reason);
             }).catch(function(error) {
                 console.log('$$$ SOMETHING WENT WRONG WHEN WRITING THE MESSAGE', error);
                 return;
@@ -277,7 +279,12 @@ app.get('/home', checkAuth, function(request, response) {
                     return {email: snapshot.val().email};
                 });
                 response.render('home', {email: current_user.email, conversation_counterparts: user_display_names});
+            }, function(rejection_reason) {
+                console.log('$$$ COULD NOT LOG A USER IN', rejection_reason);
             });
+        }, function(rejection_reason) {
+            console.log('$$$ SOMETHING WENT WRONG WHEN LOGGING A USER IN', rejection_reason);
+            response.redirect('/');
         }).catch(function(error) {
             console.log('$$$ SOMETHING WENT WRONG WHEN LOOKING IN THE DATABASE', error);
             response.redirect('/');
@@ -299,7 +306,6 @@ app.post('/connect', checkAuth, function(request, response) {
             const counterpart = snapshot.val();
             // you're already chatting with this person, don't update the database
             if (counterpart.hasOwnProperty('conversations') && counterpart.conversations.hasOwnProperty(current_user.id)) {
-                console.log('$$$ YOU CANNOT RECREATE CHATS');
                 response.send({error: 'You cannot recreate existing chats'});
                 return;
             }
@@ -314,12 +320,17 @@ app.post('/connect', checkAuth, function(request, response) {
             });
 
             Promise.all(promises).then(function(snapshots) {
-                console.log('$$$ SUCCESSFULLY CONNECTED USERS');
                 response.send({
                     success: `Successfully connected you to ${counterpart.email}.`,
                     connection: counterpart.email
                 });
+            }, function(rejection_reason) {
+                console.log('$$$ COULD NOT CONNECT USERS', rejection_reason);
+                response.send({error: 'A database error occurred while looking for a user.'});
             });
+        }, function(rejection_reason) {
+            console.log('$$$ COULD NOT CONNECT USERS', rejection_reason);
+            response.send({error: 'A database error occurred while looking for a user.'});
         }).catch(function(error) {
             console.log('$$$ A DATABASE ERROR OCCURRED WHILE LOOKING FOR A USER', error);
             response.send({error: 'A database error occurred while looking for a user.'});

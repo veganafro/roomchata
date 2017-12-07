@@ -1,5 +1,6 @@
 const socket = io();
 let active_conversation;
+const md5 = require('md5');
 require("firebase/database");
 const firebase = require('firebase/app').initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
@@ -13,13 +14,23 @@ const database = firebase.database();
 console.log(database);
 
 socket.on('connect', function() {
-    socket.on('listen_for_messages', function(conversation) {
-        database.ref('/conversations').child(conversation)
-            .orderByKey().limitToLast(1).on('value', messageReceived);
-    });
+    // socket.on('listen_for_messages', function(conversation) {
+    //     console.log('$$$ NOW LISTENING FOR CHANGES AT HERE', conversation);
+    //     database.ref('/conversations').child(conversation)
+    //         .orderByKey().limitToLast(1).on('value', messageReceived);
+    // });
 
     socket.on('show_conversation', function(data) {
         const message_list = document.querySelector('div[id*=messages]');
+        if (!isEmpty(data.previous_conversation)) {
+            console.log('$$$ TURNING OFF LISTENER', data.previous_conversation);
+            database.ref('/conversations').child(data.previous_conversation).off('value', messageReceived);
+        }
+        if (!isEmpty(data.active_conversation)) {
+            console.log('$$$ NOW LISTENING FOR CHANGES AT HERE', data.active_conversation);
+            database.ref('/conversations').child(data.active_conversation)
+                .orderByKey().limitToLast(1).on('value', messageReceived);
+        }
         clearMessages(message_list);
         message_list.appendChild(makeNodeWithType('span'));
         if (data.hasOwnProperty('history')) {
@@ -36,6 +47,7 @@ socket.on('connect', function() {
         } else {
             console.log('$$$ SOMETHING WENT WRONG GETTING MESSAGE HISTORY');
         }
+        console.log('$$$ GETTING THE ACTIVE CONVERSATION', data);
         active_conversation = data.active_conversation;
     });
 });
@@ -59,6 +71,7 @@ function handleSendMessage(evt) {
     if (isEmpty(message_text.value)) {
         alert('Write a message to send or pick a conversation.');
     } else {
+        console.log('$$$ FINNA WRITE A MESSAG FOOOOOOOOOL', message_text.value, active_conversation);
         socket.emit('write_message', message_text.value, active_conversation);
         message_text.value = "";
     }
@@ -93,7 +106,6 @@ function handleSearchSubmitted(evt) {
 
 function successfullyConnectUsers(request) {
     const response = JSON.parse(request.response);
-    console.log('$$$ HERE IS THE RESPONSE AFTER CONNECTING USERS', response);
     if (response.hasOwnProperty('error')) {
         alert(response.error);
     } else {
@@ -114,6 +126,7 @@ function successfullyConnectUsers(request) {
 }
 
 function messageReceived(snapshot) {
+    console.log('$$$ GOT THIS MESSAGE FROM THE LOOK UP', snapshot.val());
     const key = Object.keys(snapshot.val());
     const message = makeMessageElement(snapshot.val()[key].text, snapshot.val()[key].sender);
     const message_list = document.querySelector('div[id*=messages]');
