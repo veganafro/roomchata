@@ -1,4 +1,5 @@
 const socket = io();
+let active_conversation;
 require("firebase/database");
 const firebase = require('firebase/app').initializeApp({
     apiKey: process.env.FIREBASE_API_KEY,
@@ -9,19 +10,35 @@ const firebase = require('firebase/app').initializeApp({
 
 const database = firebase.database();
 
-socket.on('connect', function() {
-    console.log('$$$ SOCKET CONNECTED ON THE CLIENT SIDE');
+console.log(database);
 
+socket.on('connect', function() {
     socket.on('listen_for_messages', function(conversation) {
-        console.log('$$$ LISTENING ON THE CLIENT SIDE NOW', conversation);
         database.ref('/conversations').child(conversation)
-            .orderByKey().limitToLast(1).on('child_added', function(snapshot) {
-                console.log('$$$ HEARD A NEW MESSAGE WRITTEN', snapshot.val());
+            .orderByKey().limitToLast(1).on('value', messageReceived);
+    });
+
+    socket.on('show_conversation', function(data) {
+        const message_list = document.querySelector('div[id*=messages]');
+        clearMessages(message_list);
+        message_list.appendChild(makeNodeWithType('span'));
+        if (data.hasOwnProperty('history')) {
+            alert(data.message);
+            Object.keys(data.history).map(function(message_id) {
+                const message = makeMessageElement(
+                    data.history[message_id].text,
+                    data.history[message_id].sender
+                );
+                message_list.appendChild(message);
+                setTimeout(function() {message.classList.add('visible')}, 1);
             });
+            message_list.scrollTop = message_list.scrollHeight;
+        } else {
+            console.log('$$$ SOMETHING WENT WRONG GETTING MESSAGE HISTORY');
+        }
+        active_conversation = data.active_conversation;
     });
 });
-
-let active_conversation;
 
 window.onload = function() {
     const search = document.querySelector('form[name*=search]');
@@ -43,13 +60,13 @@ function handleSendMessage(evt) {
         alert('Write a message to send or pick a conversation.');
     } else {
         socket.emit('write_message', message_text.value, active_conversation);
-        const message_list = document.querySelector('div[id*=messages]');
-        const message_sender = document.querySelector('span[name*=email]');
-        const message = makeMessageElement(message_text.value, message_sender.textContent);
-
-        message_list.appendChild(message);
-        setTimeout(function() {message.classList.add('visible')}, 1);
-        message_list.scrollTop = message_list.scrollHeight;
+        // const message_list = document.querySelector('div[id*=messages]');
+        // const message_sender = document.querySelector('span[name*=email]');
+        // const message = makeMessageElement(message_text.value, message_sender.textContent);
+        //
+        // message_list.appendChild(message);
+        // setTimeout(function() {message.classList.add('visible')}, 1);
+        // message_list.scrollTop = message_list.scrollHeight;
         message_text.value = "";
     }
 }
@@ -59,27 +76,6 @@ function handleConnectionChosen(evt) {
     const selected_user = evt.target;
     socket.emit('open_conversation', selected_user.textContent);
 }
-
-socket.on('show_conversation', function(data) {
-    const message_list = document.querySelector('div[id*=messages]');
-    clearMessages(message_list);
-    message_list.appendChild(makeNodeWithType('span'));
-    if (data.hasOwnProperty('history')) {
-        alert(data.message);
-        Object.keys(data.history).map(function(message_id) {
-            const message = makeMessageElement(
-                data.history[message_id].text,
-                data.history[message_id].sender
-            );
-            message_list.appendChild(message);
-            setTimeout(function() {message.classList.add('visible')}, 1);
-        });
-        message_list.scrollTop = message_list.scrollHeight;
-    } else {
-        console.log('$$$ SOMETHING WENT WRONG GETTING MESSAGE HISTORY');
-    }
-    active_conversation = data.active_conversation;
-});
 
 function handleSearchSubmitted(evt) {
     evt.preventDefault();
@@ -122,6 +118,15 @@ function successfullyConnectUsers(request) {
         alert(response.success);
     }
     document.querySelector('input[name=search]').value = "";
+}
+
+function messageReceived(snapshot) {
+    const key = Object.keys(snapshot.val());
+    const message = makeMessageElement(snapshot.val()[key].text, snapshot.val()[key].sender);
+    const message_list = document.querySelector('div[id*=messages]');
+    message_list.appendChild(message);
+    setTimeout(function() {message.classList.add('visible')}, 1);
+    message_list.scrollTop = message_list.scrollHeight;
 }
 
 function makeMessageElement(message, sender) {
