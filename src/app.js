@@ -160,14 +160,30 @@ io.on('connection', function(socket) {
                         console.log('$$$ COULD NOT FIND USER IN DATABASE WHEN UPDATING', snapshot);
                     } else {
                         current_user.conversations = snapshot.val().conversations;
-                        io.sockets.connected[socket.id].emit('show_conversation',
-                            {
-                                active_conversation: current_user.conversations[md5(counterpart_email)],
-                                previous_conversation: current_user.conversations[md5(previous_conversation)],
-                                message: 'Have fun chatting.',
-                                history: snapshot.val()
-                            }
-                        );
+                        admin.database().ref('/conversations').child(snapshot.val().conversations[md5(counterpart_email)])
+                            .orderByKey().limitToLast(10).once('value')
+                            .then(function(message_history) {
+                                if (!message_history.val()) {
+                                    console.log('$$$ NO MESSAGE HISTORY FOR THESE NEW CONNECTIONS', message_history.val());
+                                    io.sockets.connected[socket.id].emit('show_conversation',
+                                        {
+                                            active_conversation: current_user.conversations[md5(counterpart_email)],
+                                            previous_conversation: current_user.conversations[md5(previous_conversation)],
+                                            message: 'Have fun chatting.',
+                                            history: {}
+                                        }
+                                    );
+                                } else {
+                                    io.sockets.connected[socket.id].emit('show_conversation',
+                                        {
+                                            active_conversation: current_user.conversations[md5(counterpart_email)],
+                                            previous_conversation: current_user.conversations[md5(previous_conversation)],
+                                            message: 'Have fun chatting.',
+                                            history: message_history.val()
+                                        }
+                                    );
+                                }
+                            })
                     }
                 }, function (rejection_reason) {
                     console.log('$$$ COULD NOT FINISH OPEING THE CONVERSATION', rejection_reason);
