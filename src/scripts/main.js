@@ -60,13 +60,6 @@ function handleSendMessage(evt) {
         alert('Write a message to send or pick a conversation.');
     } else {
         socket.emit('write_message', message_text.value, active_conversation);
-        // const message_list = document.querySelector('div[id*=messages]');
-        // const message_sender = document.querySelector('span[name*=email]');
-        // const message = makeMessageElement(message_text.value, message_sender.textContent);
-        //
-        // message_list.appendChild(message);
-        // setTimeout(function() {message.classList.add('visible')}, 1);
-        // message_list.scrollTop = message_list.scrollHeight;
         message_text.value = "";
     }
 }
