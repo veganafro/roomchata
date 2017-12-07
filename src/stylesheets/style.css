@@ -5,18 +5,15 @@ html, body {
     height: 100%;
     margin: 0px;
 }
-
-input[name*=login] {
-    margin: 5px;
+.login_form {
+    align-items: center;
+    justify-content: center;
 }
 
-button[name*=login] {
-    border: none;
-    outline: none;
-    background: none;
-    cursor: pointer;
-    text-decoration: none;
-    margin: 8px;
+.login_card {
+    vertical-align: middle;
+    padding: 24px;
+    flex: none;
 }
 
 .mdl-layout-title {

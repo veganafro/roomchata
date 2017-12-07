@@ -6,40 +6,43 @@ class Login extends React.Component {
     render() {
         return (
             <Base title='Login'>
-            <h1 className='login_header'>roomchata</h1>
-            <form method='POST'
-                name='login_form'>
-                <input
-                    className='login_email_input'
-                    type='text'
-                    name='login_email_text'
-                    placeholder='email address...'
-                    value={this.props.login_email_text}>
-                </input>
-                <br></br>
-                <input
-                    className='login_password_input'
-                    type='password'
-                    name='login_password_text'
-                    placeholder='password...'
-                    value={this.props.login_password_text}>
-                </input>
-                <br></br>
-                <button
-                    className='login_sign_in_submit_input'
-                    type='submit'
-                    formAction='/signin'
-                    name='login_submit_button'>
-                    log in
-                </button>
-                <button
-                    className='login_sing_up_submit_input'
-                    type='submit'
-                    formAction='/signup'
-                    name='login_submit_button'>
-                    sign up
-                </button>
-            </form>
+            <div className="login_form mdl-layout mdl-js-layout mdl-color--grey-100">
+                <main className="login_card mdl-layout__content">
+                    <div className="mdl-card mdl-shadow--6dp">
+                        <div className="mdl-card__title mdl-color--primary mdl-color-text--white">
+                            <h2 className="mdl-card__title-text">roomchata</h2>
+                        </div>
+                        <div className="mdl-card__supporting-text">
+                            <form method="POST" id='loginform'>
+                                <div className="mdl-textfield mdl-js-textfield">
+                                    <input className="mdl-textfield__input" type="text" name="username"></input>
+                                    <label className="mdl-textfield__label" htmlFor="username">Username</label>
+                                </div>
+                                <div className="mdl-textfield mdl-js-textfield">
+                                    <input className="mdl-textfield__input" type="password" name="userpass"></input>
+                                    <label className="mdl-textfield__label" htmlFor="userpass">Password</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div className="mdl-card__actions mdl-card--border">
+                            <button
+                                type='submit'
+                                form='loginform'
+                                formAction='/signin'
+                                className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                Log in
+                            </button>
+                            <button
+                                type='submit'
+                                form='loginform'
+                                formAction='/signup'
+                                className="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                                Sign up
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
             </Base>
         );
     }

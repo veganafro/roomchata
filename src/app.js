@@ -68,8 +68,8 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use('local-signup', new LocalStrategy({
-        usernameField: 'login_email_text',
-        passwordField: 'login_password_text',
+        usernameField: 'username',
+        passwordField: 'userpass',
         passReqToCallback: true
     },
     function(req, email, password, done) {
@@ -107,8 +107,8 @@ passport.use('local-signup', new LocalStrategy({
 ));
 
 passport.use('local-signin', new LocalStrategy({
-        usernameField: 'login_email_text',
-        passwordField: 'login_password_text',
+        usernameField: 'username',
+        passwordField: 'userpass',
         passReqToCallback: true
     },
     function(req, email, password, done) {
